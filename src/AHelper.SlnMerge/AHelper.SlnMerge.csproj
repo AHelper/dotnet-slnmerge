@@ -6,6 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>slnmerge</ToolCommandName>
     <AssemblyName>slnmerge</AssemblyName>
+    <PackageId>dotnet-tool-slnmerge</PackageId>
     <Copyright>Copyright (C) 2020 Collin Eggert</Copyright>
   </PropertyGroup>
 
