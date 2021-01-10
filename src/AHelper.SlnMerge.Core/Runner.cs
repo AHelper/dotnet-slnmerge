@@ -6,8 +6,8 @@ using CommandLine;
 using Microsoft.Build.Locator;
 using CommandLine.Text;
 using System.Reflection;
-using System.Collections;
 using System.Runtime.ExceptionServices;
+using System.Diagnostics;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -18,6 +18,9 @@ namespace AHelper.SlnMerge.Core
 
         [Option('p', "property", HelpText = "MSBuild property (key=value) when loading projects")]
         public IEnumerable<string> PropertyStrings { get; set; }
+
+        [Option('v', "verbosity", HelpText = "Set verbosity (verbose|info|warning|error|off)", Default = TraceLevel.Info)]
+        public TraceLevel Verbosity { get; set; }
 
         public IDictionary<string, string> Properties => PropertyStrings.Select(str => str.Split('=', 2))
                                                                         .Where(pair => pair.Length == 2)
@@ -49,6 +52,8 @@ namespace AHelper.SlnMerge.Core
         {
             try
             {
+                _outputWriter.LogLevel = options.Verbosity;
+
                 var workspace = await Workspace.CreateAsync(_outputWriter, options.Solutions);
                 await LogWorkspaceSolutionsAsync(workspace);
 

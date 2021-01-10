@@ -1,10 +1,12 @@
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace AHelper.SlnMerge.Core
 {
     public interface IOutputWriter
     {
+        TraceLevel LogLevel { get; set; }
+        
         void PrintException(Exception exception);
         void PrintComplete(int numModified);
         void PrintArgumentMessage(string message);
