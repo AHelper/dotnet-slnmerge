@@ -42,7 +42,7 @@ namespace AHelper.SlnMerge.Core
 
         public void PrintTrace(string format, params object[] args)
         {
-            Console.WriteLine(format, args);
+            Print(TraceLevel.Verbose, string.Format(format, args));
         }
 
         public void PrintWarning(Exception exception)
@@ -64,12 +64,12 @@ namespace AHelper.SlnMerge.Core
                 case TraceLevel.Error:
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Write("!!");
+                    Console.Write("ERROR");
                     break;
                 case TraceLevel.Warning:
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("##");
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.Write("WARN");
                     break;
                 case TraceLevel.Info:
                     Console.BackgroundColor = ConsoleColor.Green;
@@ -77,9 +77,8 @@ namespace AHelper.SlnMerge.Core
                     Console.Write("=>");
                     break;
                 case TraceLevel.Verbose:
-                    Console.BackgroundColor = ConsoleColor.DarkYellow;
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write("..");
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Black;
                     break;
             }
 
