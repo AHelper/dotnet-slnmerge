@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -12,5 +13,8 @@ namespace AHelper.SlnMerge.Core
         {
             Projects = projects;
         }
+
+        public override string ToString()
+            => $"{Message}:\n{string.Join("\n", Projects.Select(proj => $"-> {proj.Filepath}"))}";
     }
 }

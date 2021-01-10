@@ -44,12 +44,7 @@ namespace AHelper.SlnMerge.Core
             filepath = Path.GetFullPath(filepath, Path.GetDirectoryName(parent.Filepath));
 
             if (!File.Exists(filepath))
-                throw new FileReadException("Project does not exist")
-                {
-                    FilePath = filepath,
-                    FileType = FileReadExceptionType.Csproj,
-                    ReferencedBy = parent.Filepath
-                };
+                throw new FileReadException(FileReadExceptionType.Csproj, filepath, parent.Filepath);
 
             using var projectCollection = new ProjectCollection();
             var msbuildProject = new Microsoft.Build.Evaluation.Project(filepath, new Dictionary<string, string>(), null, projectCollection);
@@ -58,15 +53,12 @@ namespace AHelper.SlnMerge.Core
             var packageReferences = GetItems(msbuildProject, "PackageReference");
             var projectReferences = GetItems(msbuildProject, "ProjectReference");
 
-            // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            // {
-            //     filepath = filepath.ToLowerInvariant();
-            //     projectReferences = projectReferences.Select(path => path.ToLowerInvariant())
-            //                                          .ToList();
-            // }
-
             return new Project(filepath, packageId, packageReferences, projectReferences, outputWriter, parent);
         }
+
+        internal static Project CreateForTesting(string filepath,
+                                                 string packageId)
+            => new(filepath, packageId, Array.Empty<string>(), Array.Empty<string>(), null, null);
 
         public IList<string> GetUnresolvedPackageReferences(Workspace workspace)
             => PackageReferences.Except(ProjectReferences.Join(workspace.PackageLookup.Values,
@@ -110,12 +102,7 @@ namespace AHelper.SlnMerge.Core
 
             if (!string.IsNullOrEmpty(nuspecFile) && !File.Exists(nuspecPath))
             {
-                throw new FileReadException("Nuspec file could not be found")
-                {
-                    FilePath = nuspecPath,
-                    FileType = FileReadExceptionType.Nuspec,
-                    ReferencedBy = filepath
-                };
+                throw new FileReadException(FileReadExceptionType.Nuspec, nuspecPath, filepath);
             }
 
             var packageId = msbuildProject.GetPropertyValue("PackageId");
