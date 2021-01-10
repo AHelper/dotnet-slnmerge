@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Resources\Build-AssemblyName.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-Basic.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-Chained.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-DirectoryBuildTargets.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-Nuspec.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-PackageId.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-Precedence.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build.ps1" CopyToOutputDirectory="always" />
+    <None Include="Resources\Common.psm1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\FailureConditions\Build-CsprojNotInSln.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\FailureConditions\Build-Cyclic.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\FailureConditions\Build-DuplicatePackages.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\FailureConditions\Build-MissingCsproj.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\FailureConditions\Build-MissingNuspec.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\FailureConditions\Build-MissingSln.ps1" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="1.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="JunitXml.TestLogger" Version="2.1.78" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Moq" Version="4.14.7" />
+    <PackageReference Include="SpecFlow" Version="3.4.14" />
+    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.4.14" />
+    <PackageReference Include="SpecFlow.xUnit" Version="3.4.14" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+    <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AHelper.SlnMerge.Core\AHelper.SlnMerge.Core.csproj" />
+  </ItemGroup>
+
+</Project>

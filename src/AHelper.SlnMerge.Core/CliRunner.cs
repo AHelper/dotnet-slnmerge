@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace AHelper.SlnMerge
+namespace AHelper.SlnMerge.Core
 {
     internal class CliRunner
     {
