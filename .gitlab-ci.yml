@@ -21,3 +21,9 @@ test:
     paths:
       - TestResults/coverage/
       - TestResults/TestResults.xml
+  cache:
+    key: 
+      files:
+        - test/AHelper.SlnMerge.Core.Tests/Resources/**/*.ps1
+    paths:
+      - test/AHelper.SlnMerge.Core.Tests/bin/Debug/*/Resources/*.zip
