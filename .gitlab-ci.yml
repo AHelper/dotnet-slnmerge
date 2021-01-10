@@ -1,0 +1,23 @@
+default:
+  image: mcr.microsoft.com/dotnet/sdk:5.0
+
+stages:
+  - test
+  # - publish
+
+test:
+  stage: test
+  script:
+    - dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
+    - dotnet test --collect:"XPlat Code Coverage" --logger:junit
+    - tools/reportgenerator '-reports:test/*/TestResults/*/*.xml' '-targetdir:TestResults/coverage/' '-reporttypes:TextSummary;Html'
+    - cat TestResults/coverage/Summary.txt
+  coverage: '/Line coverage: (\d+\.\d+)%/'
+  artifacts:
+    reports:
+      junit:
+        - 'test/*/TestResults/TestResults.xml'
+    # See https://docs.gitlab.com/ee/ci/junit_test_reports.html#enabling-the-feature
+    paths:
+      - TestResults/coverage/
+      - TestResults/TestResults.xml

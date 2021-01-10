@@ -11,9 +11,9 @@ using System.Xml.XPath;
 using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 
-namespace AHelper.SlnMerge
+namespace AHelper.SlnMerge.Core
 {
-    internal class Project
+    public class Project
     {
         public string PackageId { get; }
         public IList<string> PackageReferences { get; }
@@ -22,25 +22,34 @@ namespace AHelper.SlnMerge
         public Solution Parent { get; }
         public IDictionary<Project, ChangeType> Changes { get; } = new ConcurrentDictionary<Project, ChangeType>();
 
+        private IOutputWriter _outputWriter;
+
         private Project(string filepath,
                         string packageId,
                         IList<string> packageReferences,
                         IList<string> projectReferences,
+                        IOutputWriter outputWriter,
                         Solution parent)
         {
             Filepath = filepath;
             PackageId = packageId;
             PackageReferences = packageReferences;
             ProjectReferences = projectReferences;
+            _outputWriter = outputWriter;
             Parent = parent;
         }
 
-        public static async Task<Project> CreateAsync(string filepath, Solution parent)
+        public static async Task<Project> CreateAsync(string filepath, Solution parent, IOutputWriter outputWriter)
         {
             filepath = Path.GetFullPath(filepath, Path.GetDirectoryName(parent.Filepath));
 
             if (!File.Exists(filepath))
-                throw new FileNotFoundException(filepath);
+                throw new FileReadException("Project does not exist")
+                {
+                    FilePath = filepath,
+                    FileType = FileReadExceptionType.Csproj,
+                    ReferencedBy = parent.Filepath
+                };
 
             using var projectCollection = new ProjectCollection();
             var msbuildProject = new Microsoft.Build.Evaluation.Project(filepath, new Dictionary<string, string>(), null, projectCollection);
@@ -49,14 +58,14 @@ namespace AHelper.SlnMerge
             var packageReferences = GetItems(msbuildProject, "PackageReference");
             var projectReferences = GetItems(msbuildProject, "ProjectReference");
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                filepath = filepath.ToLowerInvariant();
-                projectReferences = projectReferences.Select(path => path.ToLowerInvariant())
-                                                     .ToList();
-            }
+            // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            // {
+            //     filepath = filepath.ToLowerInvariant();
+            //     projectReferences = projectReferences.Select(path => path.ToLowerInvariant())
+            //                                          .ToList();
+            // }
 
-            return new Project(filepath, packageId, packageReferences, projectReferences, parent);
+            return new Project(filepath, packageId, packageReferences, projectReferences, outputWriter, parent);
         }
 
         public IList<string> GetUnresolvedPackageReferences(Workspace workspace)
@@ -94,6 +103,19 @@ namespace AHelper.SlnMerge
             catch (FileNotFoundException)
             {
                 // ignore
+            }
+
+            var nuspecFile = msbuildProject.GetPropertyValue("NuspecFile");
+            var nuspecPath = Path.Combine(Path.GetDirectoryName(filepath), nuspecFile);
+
+            if (!string.IsNullOrEmpty(nuspecFile) && !File.Exists(nuspecPath))
+            {
+                throw new FileReadException("Nuspec file could not be found")
+                {
+                    FilePath = nuspecPath,
+                    FileType = FileReadExceptionType.Nuspec,
+                    ReferencedBy = filepath
+                };
             }
 
             var packageId = msbuildProject.GetPropertyValue("PackageId");

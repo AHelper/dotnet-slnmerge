@@ -2,9 +2,9 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace AHelper.SlnMerge
+namespace AHelper.SlnMerge.Core
 {
-    internal class AsyncLazy<T> : Lazy<Task<T>>
+    public class AsyncLazy<T> : Lazy<Task<T>>
     {
         public AsyncLazy(Func<T> factory)
             : base(() => Task.Factory.StartNew(factory))
