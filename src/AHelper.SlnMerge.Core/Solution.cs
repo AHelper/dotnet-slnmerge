@@ -31,11 +31,7 @@ namespace AHelper.SlnMerge.Core
 
             if (!File.Exists(filepath))
             {
-                throw new FileReadException("Solution not found")
-                {
-                    FilePath = Path.GetFullPath(filepath),
-                    FileType = FileReadExceptionType.Sln
-                };
+                throw new FileReadException(FileReadExceptionType.Sln, Path.GetFullPath(filepath), null);
             }
 
             Filepath = Path.GetFullPath(filepath);
@@ -56,22 +52,12 @@ namespace AHelper.SlnMerge.Core
 
                     if (!File.Exists(refPath))
                     {
-                        throw new FileReadException("Project reference does not exist")
-                        {
-                            FilePath = refPath,
-                            FileType = FileReadExceptionType.Csproj,
-                            ReferencedBy = proj.Filepath
-                        };
+                        throw new FileReadException(FileReadExceptionType.Csproj, refPath, proj.Filepath);
                     }
 
                     if (!filepaths.Contains(refPath))
                     {
-                        _outputWriter.PrintWarning(new FileReadException("Project reference is not in the solution")
-                        {
-                            FilePath = refPath,
-                            FileType = FileReadExceptionType.ProjectReference,
-                            ReferencedBy = proj.Filepath
-                        });
+                        _outputWriter.PrintWarning(new FileReadException(FileReadExceptionType.ProjectReference, refPath, proj.Filepath));
                     }
                 }
             }

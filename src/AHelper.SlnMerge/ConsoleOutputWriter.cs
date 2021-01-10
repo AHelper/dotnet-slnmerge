@@ -1,9 +1,6 @@
 using System.IO;
 using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Collections.Generic;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -35,31 +32,7 @@ namespace AHelper.SlnMerge.Core
 
         public void PrintException(Exception exception)
         {
-            var message = exception switch
-            {
-                FileNotFoundException fnf => $"{fnf.Message}: {fnf.FileName}",
-                AmbiguousProjectException ape => $"{ape.Message}: {FormatAbiguousProjectMessage(ape.Conflicts)}",
-                CyclicReferenceException cre => $"{cre.Message}:\n{string.Join("\n", cre.Projects.Select(proj => $"-> {proj.Filepath}"))}",
-                _ => exception.Message
-            };
-            Print(TraceLevel.Error, message);
-
-            string FormatAbiguousProjectMessage(IDictionary<string, IEnumerable<string>> conflicts)
-            {
-                var output = new StringBuilder();
-
-                foreach (var kvp in conflicts)
-                {
-                    output.AppendFormat("- {0}\n", kvp.Key);
-
-                    foreach (var proj in kvp.Value)
-                    {
-                        output.AppendFormat("  - {0}\n", proj);
-                    }
-                }
-
-                return output.ToString();
-            }
+            Print(TraceLevel.Error, exception.ToString());
         }
 
         public void PrintProgress(string file)
@@ -74,12 +47,7 @@ namespace AHelper.SlnMerge.Core
 
         public void PrintWarning(Exception exception)
         {
-            var message = exception switch
-            {
-                FileNotFoundException fnf => $"{fnf.Message}: {fnf.FileName}",
-                _ => exception.Message
-            };
-            Print(TraceLevel.Warning, message);
+            Print(TraceLevel.Warning, exception.ToString());
         }
 
         private void Print(TraceLevel level, string message)

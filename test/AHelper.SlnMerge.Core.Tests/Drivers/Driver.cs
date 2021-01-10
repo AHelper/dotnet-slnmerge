@@ -14,8 +14,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
     {
         public ITestOutputHelper OutputHelper { get; set; }
         private string _projectPath;
-        private Exception _runnerException;
-        private Mock<IOutputWriter> _outputWriterMock;
+        private readonly Mock<IOutputWriter> _outputWriterMock;
 
         private Exception OutputException => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintException))?.Arguments[0] as Exception;
         private Exception OutputWarning => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintWarning))?.Arguments[0] as Exception;
@@ -96,13 +95,11 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
         public void CheckNoExceptions()
         {
-            Assert.Null(_runnerException);
             _outputWriterMock.Verify(writer => writer.PrintException(It.IsAny<Exception>()), Times.Never());
         }
 
         public void CheckHandledException<TException>() where TException : Exception
         {
-            Assert.Null(_runnerException);
             _outputWriterMock.Verify(writer => writer.PrintException(It.IsAny<TException>()), Times.Once());
         }
 
