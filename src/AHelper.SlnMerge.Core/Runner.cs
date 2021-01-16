@@ -75,9 +75,10 @@ namespace AHelper.SlnMerge.Core
         {
             switch (exception)
             {
-                case FileReadException:
                 case AmbiguousProjectException:
+                case AmbiguousSolutionException:
                 case CyclicReferenceException:
+                case FileReadException:
                     _outputWriter.PrintException(exception);
                     break;
                 case AggregateException aggregateException:

@@ -34,13 +34,30 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         public void SetTestProject(string name)
             => _projectPath = Path.Join("Resources", name);
 
-        public async Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert)
+        public Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert)
+            => MergeSolutionsRawAsync(solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(), shouldAssert);
+
+        public async Task MergeLocalSolutionsAsync(IEnumerable<string> paths, bool shouldAssert)
+        {
+            var currentDirectory = Directory.GetCurrentDirectory();
+            try
+            {
+                Directory.SetCurrentDirectory(_projectPath);
+                await MergeSolutionsRawAsync(paths.Append(".").ToList(), shouldAssert);
+            }
+            finally
+            {
+                Directory.SetCurrentDirectory(currentDirectory);
+            }
+        }
+
+        public async Task MergeSolutionsRawAsync(IList<string> solutions, bool shouldAssert)
         {
             try
             {
                 await new Runner(_outputWriterMock.Object).RunAsync(new RunnerOptions
                 {
-                    Solutions = solutions.Select(sln => Path.Join(_projectPath, sln)).ToList()
+                    Solutions = solutions
                 });
             }
             catch (Exception ex)
@@ -66,6 +83,15 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             Assert.All(projects, project => Assert.Contains(project, actualProjects));
         }
 
+        public void CheckAmbiguousSolutionException(IEnumerable<string> solutionPaths)
+        {
+            Assert.IsType<AmbiguousSolutionException>(OutputException);
+
+            var ambiguousSolutionException = (AmbiguousSolutionException)OutputException;
+
+            Assert.All(solutionPaths, sln => Assert.Contains(NormalizeToProjectPath(sln), ambiguousSolutionException.Paths.Select(NormalizePaths)));
+        }
+
         public void CheckCyclicReferenceException(IList<string> packageIds)
         {
             Assert.IsType<CyclicReferenceException>(OutputException);
@@ -81,7 +107,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             Assert.IsType<FileReadException>(exception);
 
             var fileReadException = exception as FileReadException;
-            
+
             Assert.Equal(NormalizePaths(Path.GetFullPath(Path.Join(_projectPath, path))), NormalizePaths(fileReadException.FilePath));
         }
 
@@ -131,5 +157,8 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
         private static string NormalizePaths(string path)
             => path.Replace('\\', '/');
+
+        private string NormalizeToProjectPath(string relativePath)
+            => NormalizePaths(Path.GetFullPath(Path.Join(_projectPath, relativePath)));
     }
 }

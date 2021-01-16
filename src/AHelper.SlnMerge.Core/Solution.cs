@@ -2,9 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -20,14 +18,15 @@ namespace AHelper.SlnMerge.Core
         {
             if (Directory.Exists(filepath))
             {
-                var directoryName = Path.GetFileName(Path.TrimEndingDirectorySeparator(filepath));
-                filepath = Path.Join(filepath, $"{directoryName}.sln");
-            }
+                var solutions = Directory.GetFiles(filepath, "*.sln");
 
-            // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            // {
-            //     filepath = filepath.ToLowerInvariant();
-            // }
+                if (solutions.Length > 1)
+                {
+                    throw new AmbiguousSolutionException(solutions.Select(Path.GetFullPath).ToList());
+                }
+
+                filepath = solutions.FirstOrDefault() ?? filepath;
+            }
 
             if (!File.Exists(filepath))
             {

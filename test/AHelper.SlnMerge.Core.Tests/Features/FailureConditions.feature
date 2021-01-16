@@ -19,8 +19,12 @@ Feature: Handle errors gracefully
     Scenario: Missing sln throws FileReadException(Sln) error
         Given test project "MissingSln" created with "FailureConditions/Build-MissingSln.ps1"
         When merging solutions with exceptions: A, B
-        Then it should print error FileReadException for 'B/B.sln'
+        Then it should print error FileReadException for 'B'
     Scenario: Package ID conflict throws AmbiguousProjectException
         Given test project "DuplicatePackages" created with "FailureConditions/Build-DuplicatePackages.ps1"
         When merging solutions with exceptions: A, B
         Then it should throw an AmbiguousProjectException with package id 'B.PackageId'
+    Scenario: Multiple solutions in a folder throws AmbiguousSolutionException
+        Given test project "AmbiguousSolution" created with "FailureConditions/Build-AmbiguousSolution.ps1"
+        When merging solutions with exceptions: A
+        Then it should throw an AmbiguousSolutionException with solutions: A/A.sln, A/B.sln
