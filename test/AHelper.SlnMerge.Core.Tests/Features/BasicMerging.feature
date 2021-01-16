@@ -30,6 +30,12 @@ Feature: merging solutions: without options
         And solution B should include ../C/CA/CA.csproj, ../C/CB/CB.csproj, ../D/DA/DA.csproj, ../D/DB/DB.csproj
         And solution C should include ../D/DA/DA.csproj, ../D/DB/DB.csproj
 
+    Scenario: DifferentSlnName
+        Given test project "DifferentSlnName" created with "Build-DifferentSlnName.ps1"
+        When merging solutions: A, B
+        Then project A/A should reference ../../B/B/B.csproj
+        And solution A should include ../B/B/B.csproj
+
     Scenario: DirectoryBuildTargets
         Given test project "DirectoryBuildTargets" created with "Build-DirectoryBuildTargets.ps1"
         When merging solutions: A, B
@@ -56,3 +62,8 @@ Feature: merging solutions: without options
         And project A/AC should reference ../../B/BC/BC.csproj
         And project A/AD should reference ../../B/BD/BD.csproj
         And solution A should include ../B/BA/BA.csproj, ../B/BB/BB.csproj, ../B/BC/BC.csproj, ../B/BD/BD.csproj
+
+    Scenario: LocalSln
+        Given test project "LocalSln" created with "Build-LocalSln.ps1"
+        When merging the local solution with: A
+        Then project . should reference A/A/A.csproj

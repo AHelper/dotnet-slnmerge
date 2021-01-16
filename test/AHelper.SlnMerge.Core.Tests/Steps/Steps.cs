@@ -37,6 +37,14 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         public Task WhenMergeSolutionsAsync(string names)
             => _driver.MergeSolutionsAsync(Split(names), true);
 
+        [When(@"merging the local solution with: (.*)")]
+        public Task WhenMergeLocalSolutionAsync(string paths)
+            => _driver.MergeLocalSolutionsAsync(Split(paths), true);
+
+        [When(@"merging the local solution with exceptions: (.*)")]
+        public Task WhenMergeLocalSolutionWithExceptionsAsync(string paths)
+            => _driver.MergeLocalSolutionsAsync(Split(paths), false);
+
         [When(@"merging solutions with exceptions: (.*)")]
         public Task WhenMergeSolutionsWithExceptionsAsync(string names)
             => _driver.MergeSolutionsAsync(Split(names), false);
@@ -64,6 +72,10 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         [Then(@"it should throw an AmbiguousProjectException with package id '(.*)'")]
         public void ThenCheckAmbiguousProjectException(string packageId)
             => _driver.CheckAmbiguousProjectException(packageId);
+
+        [Then(@"it should throw an AmbiguousSolutionException with solutions: (.*)")]
+        public void ThenCheckAmbigiousSolutionException(string solutions)
+            => _driver.CheckAmbiguousSolutionException(Split(solutions));
 
         private IEnumerable<string> Split(string str)
             => str.Split(',').Select(name => name.Trim());
