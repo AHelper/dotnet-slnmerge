@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
-using Microsoft.CodeAnalysis;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -35,7 +32,6 @@ namespace AHelper.SlnMerge.Core
         public IList<string> TargetFrameworks { get; set; }
         public string Filepath { get; }
         public Solution Parent { get; }
-        //public IDictionary<Project, ChangeType> Changes { get; } = new ConcurrentDictionary<Project, ChangeType>();
         public IList<Change> Changes { get; } = new List<Change>();
 
         private IOutputWriter _outputWriter;
@@ -154,6 +150,43 @@ namespace AHelper.SlnMerge.Core
                                                                             Framework = framework, 
                                                                             Project = workspace.PackageLookup[reference.Include] 
                                                                         })));
+
+        public void WriteChanges()
+        {
+            var project = Microsoft.Build.Construction.ProjectRootElement.Open(Filepath, new ProjectCollection(), true);
+            var changes = Changes.GroupBy(change => change.Project)
+                                 .Select(change => TargetFrameworks.All(tf => change.Any(c => c.Framework == tf))
+                                     ? (change.Key, frameworks: new[] { "" }) 
+                                     : (change.Key, frameworks: change.Select(c => c.Framework)))
+                                 .SelectMany(tuple => tuple.frameworks.Select(framework => (tuple.Key, framework)));
+
+            foreach (var change in changes)
+            {
+                var itemGroup = project.ItemGroups.FirstOrDefault(ig => IsConditionForFramework(ig.Condition, change.framework) && DoesItemGroupContainProjectReference(ig));
+
+                if (itemGroup == null)
+                {
+                    itemGroup = project.AddItemGroup();
+
+                    if (change.framework != string.Empty)
+                    {
+                        itemGroup.Condition = $"'$(TargetFramework)' == '{change.framework}'";
+                    }
+                }
+
+                var item = itemGroup.AddItem("ProjectReference", Path.GetRelativePath(Path.GetDirectoryName(Filepath), change.Key.Filepath));
+                item.AddMetadata("Origin", "slnmerge", true);
+            }
+
+            project.Save();
+
+            bool IsConditionForFramework(string condition, string framework)
+                => framework == string.Empty && condition == string.Empty ||
+                   Regex.IsMatch(condition, $"'$(TargetFramework)'\\s*==\\s*'{framework}'");
+
+            bool DoesItemGroupContainProjectReference(Microsoft.Build.Construction.ProjectItemGroupElement itemGroup)
+                => itemGroup.Children.Any(item => item.ElementName == "ProjectReference");
+        }
 
         private static IList<string> GetItems(Microsoft.Build.Evaluation.Project msbuildProject, string itemType)
             => msbuildProject.GetItems(itemType)
