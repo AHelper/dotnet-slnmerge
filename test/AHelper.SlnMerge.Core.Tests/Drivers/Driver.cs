@@ -37,19 +37,8 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         public Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert)
             => MergeSolutionsRawAsync(solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(), shouldAssert);
 
-        public async Task MergeLocalSolutionsAsync(IEnumerable<string> paths, bool shouldAssert)
-        {
-            var currentDirectory = Directory.GetCurrentDirectory();
-            try
-            {
-                Directory.SetCurrentDirectory(_projectPath);
-                await MergeSolutionsRawAsync(paths.Append(".").ToList(), shouldAssert);
-            }
-            finally
-            {
-                Directory.SetCurrentDirectory(currentDirectory);
-            }
-        }
+        public Task MergeLocalSolutionsAsync(IEnumerable<string> paths, bool shouldAssert)
+            => MergeSolutionsRawAsync(paths.Select(sln => Path.Join(_projectPath, sln)).Append($"{_projectPath}/.").ToList(), shouldAssert);
 
         public async Task MergeSolutionsRawAsync(IList<string> solutions, bool shouldAssert)
         {
