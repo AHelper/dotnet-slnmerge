@@ -11,6 +11,7 @@
     <None Include="Resources\Build-DifferentSlnName.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build-DirectoryBuildTargets.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build-LocalSln.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-MultiFramework.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build-Nuspec.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build-PackageId.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build-Precedence.ps1" CopyToOutputDirectory="Always" />

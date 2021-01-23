@@ -67,3 +67,11 @@ Feature: merging solutions: without options
         Given test project "LocalSln" created with "Build-LocalSln.ps1"
         When merging the local solution with: A
         Then project . should reference A/A/A.csproj
+
+    Scenario: Multiple Frameworks
+        Given test project "MultiFramework" created with "Build-MultiFramework.ps1"
+        When merging solutions: A, B, C
+        Then project A/A/A.csproj should reference ../../B/B/B.csproj for framework netstandard2.0
+        And project A/A/A.csproj should reference ../../C/C/C.csproj for framework net5.0
+        And solution A should include ../B/B/B.csproj, ../C/C/C.csproj
+

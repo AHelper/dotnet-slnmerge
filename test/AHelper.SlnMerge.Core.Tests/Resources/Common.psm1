@@ -1,11 +1,11 @@
-function New-Projects([string] $SolutionName, [string[]] $Names) {
+function New-Projects([string] $SolutionName, [string[]] $Names, [string] $Framework = "netstandard2.0") {
     mkdir $SolutionName >$null
     Set-Location $SolutionName
     mkdir $Names >$null
 
     foreach ($name in $Names) {
         Set-Location $name
-        dotnet new classlib -f netstandard2.0
+        dotnet new classlib -f $Framework
         Set-Location ..
     }
     dotnet new sln
@@ -16,6 +16,14 @@ function New-Projects([string] $SolutionName, [string[]] $Names) {
 function Add-Property([string] $CsprojPath, [xml] $Property) {
     $xml = [xml](Get-Content -Raw $CsprojPath)
     $xml.Project.PropertyGroup.AppendChild($xml.ImportNode($Property.DocumentElement, $true)) >$null
+    $xml.Save((Join-Path (Get-Location) $CsprojPath))
+}
+
+function Remove-Property([string] $CsprojPath, [string] $TagName) {
+    $xml = [xml](Get-Content -Raw $CsprojPath)
+    foreach($child in @($xml.Project.PropertyGroup.GetElementsByTagName($TagName))) {
+        $child.ParentNode.RemoveChild($child)
+    }
     $xml.Save((Join-Path (Get-Location) $CsprojPath))
 }
 

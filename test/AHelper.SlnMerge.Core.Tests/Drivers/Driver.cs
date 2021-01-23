@@ -77,6 +77,16 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             Assert.All(references, reference => Assert.Contains(reference, actualReferences));
         }
 
+        public void CheckReferences(string projectPath, IEnumerable<string> references, string framework)
+        {
+            var project = new Microsoft.Build.Evaluation.Project(Path.Combine(_projectPath, projectPath),
+                                                                 new Dictionary<string, string> { ["TargetFramework"] = framework },
+                                                                 null,
+                                                                 new Microsoft.Build.Evaluation.ProjectCollection());
+            var referenceItems = project.GetItems("ProjectReference").Select(item => item.EvaluatedInclude).Select(NormalizePaths);
+            Assert.All(references, reference => Assert.Contains(reference, referenceItems));
+        }
+
         public void CheckSolution(string solution, IEnumerable<string> projects)
         {
             var actualProjects = RunProcess("dotnet", "sln", solution, "list").Skip(2).Select(NormalizePaths).ToList();

@@ -47,7 +47,7 @@ namespace AHelper.SlnMerge.Core
             {
                 foreach (var projectRef in proj.ProjectReferences)
                 {
-                    var refPath = Path.GetFullPath(projectRef, Path.GetDirectoryName(proj.Filepath));
+                    var refPath = Path.GetFullPath(projectRef.Include, Path.GetDirectoryName(proj.Filepath));
 
                     if (!File.Exists(refPath))
                     {

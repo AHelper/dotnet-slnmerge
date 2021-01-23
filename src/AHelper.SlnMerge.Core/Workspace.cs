@@ -145,14 +145,31 @@ namespace AHelper.SlnMerge.Core
 
                 foreach (var project in await sln.Projects)
                 {
-                    project.Changes.GroupBy(kvp => kvp.Value)
+                    var allFrameworkChanges = project.Changes.GroupBy(change => change.Project)
+                                                             .Where(change => change.Select(c => c.Framework).SequenceEqual(project.TargetFrameworks));
+
+                    if (allFrameworkChanges.Any())
+                    { 
+                        CliRunner.ExecuteDotnet(isDryRun, new[]
+                        {
+                            "add",
+                            project.Filepath,
+                            "reference"
+                        }.Concat(allFrameworkChanges.Select(change => change.Key.Filepath))
+                         .ToArray());
+                    }
+
+                    project.Changes.Where(change => !allFrameworkChanges.Any(afc => afc.Key == change.Project))
+                                   .GroupBy(kvp => kvp.Framework)
                                    .ForEach(changes =>
                                        CliRunner.ExecuteDotnet(isDryRun, new[]
                                        {
-                                           changes.Key == ChangeType.Added ? "add" : "remove",
+                                           "add",
                                            project.Filepath,
-                                           "reference"
-                                       }.Concat(changes.Select(change => change.Key.Filepath))
+                                           "reference",
+                                           "-f",
+                                           changes.Key
+                                       }.Concat(changes.Select(change => change.Project.Filepath))
                                         .ToArray()));
                 }
             }
