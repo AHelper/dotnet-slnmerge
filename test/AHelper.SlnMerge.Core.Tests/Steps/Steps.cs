@@ -49,9 +49,13 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         public Task WhenMergeSolutionsWithExceptionsAsync(string names)
             => _driver.MergeSolutionsAsync(Split(names), false);
 
-        [Then(@"project (.*) should reference (.*)")]
+        [Then(@"project (.*) should reference ([^\s]*)")]
         public void ThenCheckReferences(string project, string references)
             => _driver.CheckReferences(project, Split(references));
+
+        [Then(@"project (.*) should reference ([^\s]*) for framework ([^\s]*)")]
+        public void ThenCheckReferences(string project, string references, string framework)
+            => _driver.CheckReferences(project, Split(references), framework);
 
         [Then(@"solution (.*) should include (.*)")]
         public void ThenCheckSolution(string solution, string projects)

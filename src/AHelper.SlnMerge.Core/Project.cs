@@ -8,26 +8,43 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 
 namespace AHelper.SlnMerge.Core
 {
+    public class Reference
+    {
+        public IList<string> Frameworks { get; set; } = new List<string>();
+        public string Include { get; set; }
+    }
+
+    public class Change
+    {
+        public ChangeType ChangeType { get; set; }
+        public string Framework { get; set; }
+        public Project Project { get; set; }
+    }
+
     public class Project
     {
         public string PackageId { get; }
-        public IList<string> PackageReferences { get; }
-        public IList<string> ProjectReferences { get; }
+        public IList<Reference> PackageReferences { get; }
+        public IList<Reference> ProjectReferences { get; }
+        public IList<string> TargetFrameworks { get; set; }
         public string Filepath { get; }
         public Solution Parent { get; }
-        public IDictionary<Project, ChangeType> Changes { get; } = new ConcurrentDictionary<Project, ChangeType>();
+        //public IDictionary<Project, ChangeType> Changes { get; } = new ConcurrentDictionary<Project, ChangeType>();
+        public IList<Change> Changes { get; } = new List<Change>();
 
         private IOutputWriter _outputWriter;
 
         private Project(string filepath,
                         string packageId,
-                        IList<string> packageReferences,
-                        IList<string> projectReferences,
+                        IList<Reference> packageReferences,
+                        IList<Reference> projectReferences,
+                        IList<string> targetFrameworks,
                         IOutputWriter outputWriter,
                         Solution parent)
         {
@@ -35,6 +52,7 @@ namespace AHelper.SlnMerge.Core
             PackageId = packageId;
             PackageReferences = packageReferences;
             ProjectReferences = projectReferences;
+            TargetFrameworks = targetFrameworks;
             _outputWriter = outputWriter;
             Parent = parent;
         }
@@ -48,34 +66,99 @@ namespace AHelper.SlnMerge.Core
 
             using var projectCollection = new ProjectCollection();
             var msbuildProject = new Microsoft.Build.Evaluation.Project(filepath, new Dictionary<string, string>(), null, projectCollection);
+            var targetFrameworks = msbuildProject.GetProperty("TargetFrameworks") switch
+            {
+                ProjectProperty pp => pp.EvaluatedValue.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+                null => new[] { msbuildProject.GetPropertyValue("TargetFramework") }
+            };
+
+            var packageReferences = new Dictionary<string, Reference>();
+            var projectReferences = new Dictionary<string, Reference>();
+
+            foreach(var targetFramework in targetFrameworks)
+            {
+                msbuildProject.SetGlobalProperty("TargetFramework", targetFramework);
+                msbuildProject.ReevaluateIfNecessary();
+
+                foreach (var include in GetItems(msbuildProject, "PackageReference"))
+                {
+                    if (!packageReferences.TryGetValue(include, out var reference))
+                    {
+                        reference = new Reference
+                        {
+                            Include = include
+                        };
+                        packageReferences.Add(include, reference);
+                    }
+
+                    reference.Frameworks.Add(targetFramework);
+                }
+
+                foreach (var include in GetItems(msbuildProject, "ProjectReference"))
+                {
+                    if (!projectReferences.TryGetValue(include, out var reference))
+                    {
+                        reference = new Reference
+                        {
+                            Include = include
+                        };
+                        projectReferences.Add(include, reference);
+                    }
+
+                    reference.Frameworks.Add(targetFramework);
+                }
+            }
 
             var packageId = await GetPackageId(filepath, msbuildProject);
-            var packageReferences = GetItems(msbuildProject, "PackageReference");
-            var projectReferences = GetItems(msbuildProject, "ProjectReference");
 
-            return new Project(filepath, packageId, packageReferences, projectReferences, outputWriter, parent);
+            return new Project(filepath, packageId, packageReferences.Values.ToList(), projectReferences.Values.ToList(), targetFrameworks, outputWriter, parent);
         }
 
         internal static Project CreateForTesting(string filepath,
                                                  string packageId)
-            => new(filepath, packageId, Array.Empty<string>(), Array.Empty<string>(), null, null);
+            => new(filepath, packageId, Array.Empty<Reference>(), Array.Empty<Reference>(), Array.Empty<string>(), null, null);
 
-        public IList<string> GetUnresolvedPackageReferences(Workspace workspace)
-            => PackageReferences.Except(ProjectReferences.Join(workspace.PackageLookup.Values,
-                                                               path => Path.GetFullPath(path, Path.GetDirectoryName(Filepath)),
-                                                               proj => proj.Filepath,
-                                                               (path, proj) => proj.PackageId))
-                                .ToList();
+        public IList<Reference> GetUnresolvedPackageReferences(Workspace workspace)
+        {
+            var projectReferences = ProjectReferences.Join(workspace.PackageLookup.Values,
+                                                           reference => Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath)),
+                                                           proj => proj.Filepath,
+                                                           (reference, proj) => new KeyValuePair<string, Reference>(proj.PackageId, reference))
+                                                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return PackageReferences.Select(reference =>
+                {
+                    if (projectReferences.TryGetValue(reference.Include, out var projectReference) &&
+                        projectReference.Frameworks.OrderBy(f => f).SequenceEqual(reference.Frameworks.OrderBy(f => f)))
+                    {
+                        return null;
+                    }
+
+                    return new Reference
+                    {
+                        Include = reference.Include,
+                        Frameworks = projectReference is not null
+                            ? reference.Frameworks.Except(reference.Frameworks.Intersect(projectReference.Frameworks)).ToList()
+                            : reference.Frameworks
+                    };
+                })
+                .Where(reference => reference is not null)
+                .ToList();
+        }
 
         public void AddReferences(Workspace workspace)
-            => GetUnresolvedPackageReferences(workspace).Select(workspace.PackageLookup.GetValueOrDefault)
-                                                        .Where(proj => proj != null)
-                                                        .ForEach(proj => Changes[proj] = ChangeType.Added);
+            => GetUnresolvedPackageReferences(workspace).Where(reference => workspace.PackageLookup.ContainsKey(reference.Include))
+                                                        .ForEach(reference => reference.Frameworks.ForEach(framework =>
+                                                            Changes.Add(new Change 
+                                                                        { 
+                                                                            ChangeType = ChangeType.Added,
+                                                                            Framework = framework, 
+                                                                            Project = workspace.PackageLookup[reference.Include] 
+                                                                        })));
 
         private static IList<string> GetItems(Microsoft.Build.Evaluation.Project msbuildProject, string itemType)
-            => msbuildProject.Items.Where(item => item.ItemType == itemType)
-                                   .Select(item => item.EvaluatedInclude)
-                                   .ToList();
+            => msbuildProject.GetItems(itemType)
+                             .Select(item => item.EvaluatedInclude)
+                             .ToList();
 
         private static async Task<string> GetPackageId(string filepath, Microsoft.Build.Evaluation.Project msbuildProject)
         {
@@ -123,15 +206,15 @@ namespace AHelper.SlnMerge.Core
                 parent.Changes[this] = ChangeType.Added;
             }
 
-            await ProjectReferences.Select(path => Path.GetFullPath(path, Path.GetDirectoryName(Filepath)))
+            await ProjectReferences.Select(reference => Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath)))
                                    .Join(workspace.PackageLookup.Values, path => path, proj => proj.Filepath, (path, proj) => proj)
                                    .Select(proj => proj.PopulateSolutionAsync(parent, workspace))
                                    .WhenAll();
         }
 
         public IEnumerable<Project> GetProjectReferences(Workspace workspace)
-            => ProjectReferences.Select(path => Path.GetFullPath(path, Path.GetDirectoryName(Filepath)))
+            => ProjectReferences.Select(reference => Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath)))
                                 .Join(workspace.PackageLookup.Values, path => path, proj => proj.Filepath, (path, proj) => proj)
-                                .Concat(Changes.Where(kvp => kvp.Value == ChangeType.Added).Select(kvp => kvp.Key));
+                                .Concat(Changes.Select(kvp => kvp.Project));
     }
 }
