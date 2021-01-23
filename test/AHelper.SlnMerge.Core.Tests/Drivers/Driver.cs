@@ -1,3 +1,4 @@
+using Microsoft.Build.Evaluation;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using MSBuildProject = Microsoft.Build.Evaluation.Project;
 
 namespace AHelper.SlnMerge.Core.Tests.Drivers
 {
@@ -60,20 +62,43 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             }
         }
 
-        public void CheckReferences(string project, IEnumerable<string> references)
+        public void CheckReferences(string projectPath, IEnumerable<string> references)
         {
-            var actualReferences = RunProcess("dotnet", "list", project, "reference").Skip(2).Select(NormalizePaths).ToList();
+            using var projectCollection = new ProjectCollection();
+            var project = new MSBuildProject(Path.Combine(_projectPath, projectPath), new Dictionary<string, string>(), null, projectCollection);
+            var items = project.GetItems("ProjectReference");
+            var actualReferences = items.Select(item => item.EvaluatedInclude).Select(NormalizePaths).ToList();
             Assert.All(references, reference => Assert.Contains(reference, actualReferences));
+            Assert.All(references, reference => Assert.Equal("slnmerge", items.FirstOrDefault(item => NormalizePaths(item.EvaluatedInclude) == reference)?.GetMetadataValue("Origin")));
         }
 
         public void CheckReferences(string projectPath, IEnumerable<string> references, string framework)
         {
-            var project = new Microsoft.Build.Evaluation.Project(Path.Combine(_projectPath, projectPath),
-                                                                 new Dictionary<string, string> { ["TargetFramework"] = framework },
+            using var projectCollection = new ProjectCollection();
+            var project = new MSBuildProject(Path.Combine(_projectPath, projectPath),
+                                                                 new Dictionary<string, string>(),
                                                                  null,
-                                                                 new Microsoft.Build.Evaluation.ProjectCollection());
-            var referenceItems = project.GetItems("ProjectReference").Select(item => item.EvaluatedInclude).Select(NormalizePaths);
-            Assert.All(references, reference => Assert.Contains(reference, referenceItems));
+                                                                 projectCollection);
+            var targetFrameworksValue = project.GetProperty("TargetFrameworks")?.EvaluatedValue ?? project.GetPropertyValue("TargetFramework");
+
+            foreach (var targetFramework in targetFrameworksValue.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                project.SetGlobalProperty("TargetFramework", targetFramework);
+                project.ReevaluateIfNecessary();
+
+                var items = project.GetItems("ProjectReference");
+                var referenceItems = items.Select(item => item.EvaluatedInclude).Select(NormalizePaths);
+
+                if (targetFramework == framework)
+                {
+                    Assert.All(references, reference => Assert.Contains(reference, referenceItems));
+                    Assert.All(references, reference => Assert.Equal("slnmerge", items.FirstOrDefault(item => NormalizePaths(item.EvaluatedInclude) == reference)?.GetMetadataValue("Origin")));
+                }
+                else
+                {
+                    Assert.All(references, reference => Assert.DoesNotContain(reference, referenceItems));
+                }
+            }
         }
 
         public void CheckSolution(string solution, IEnumerable<string> projects)
