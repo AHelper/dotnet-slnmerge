@@ -59,14 +59,13 @@ namespace AHelper.SlnMerge.Core
 
         public async Task AddReferencesAsync()
             => await Solutions.Select(sln => sln.Projects.Value)
-                             .WhenAll(projs => projs.SelectMany(projs => projs)
-                                                    .ForEach(proj => proj.AddReferences(this)));
+                              .WhenAll(projs => projs.SelectMany(projs => projs)
+                                                     .ForEach(proj => proj.AddReferences(this)));
 
         public async Task RemoveReferencesAsync()
-            => throw new NotImplementedException();
-            //=> await Solutions.Select(sln => sln.Projects.Value)
-            //                 .WhenAll(projs => projs.SelectMany(projs => projs)
-            //                                        .ForEach(proj => proj.RemoveReferences(this)));
+            => await Solutions.Select(sln => sln.Projects.Value)
+                              .WhenAll(projs => projs.SelectMany(projs => projs)
+                                                     .ForEach(proj => proj.RemoveReferences(this)));
 
         public async Task CheckForCircularReferences()
         {
@@ -135,10 +134,9 @@ namespace AHelper.SlnMerge.Core
             }
         }
 
-        public async Task CleanupSolutionsAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task CleanupSolutionsAsync()
+            => Solutions.Select(sln => sln.PruneProjectsAsync(this))
+                        .WhenAll();
 
         public async Task CommitChangesAsync(bool isDryRun)
         {

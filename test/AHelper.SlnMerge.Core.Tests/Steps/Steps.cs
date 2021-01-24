@@ -65,6 +65,10 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         public void ThenCheckReferences(string project, string references, string framework)
             => _driver.CheckReferences(project, Split(references), framework);
 
+        [Then(@"project (.*) should have (.*) item groups")]
+        public void ThenProjectAAA_CsprojShouldHaveItemGroups(string project, int numItemGroups)
+            => _driver.CheckNumberOfItemGroups(project, numItemGroups);
+
         [Then(@"solution (.*) should include (.*)")]
         public void ThenCheckSolution(string solution, string projects)
             => _driver.CheckSolution(solution, Split(projects));

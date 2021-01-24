@@ -67,8 +67,21 @@ Feature: merging solutions: without options
 
     Scenario: Multiple Frameworks
         Given test project "MultiFramework" created with "Build-MultiFramework.ps1"
-        When merging solutions: A, B, C
-        Then project A/A/A.csproj should reference ../../B/B/B.csproj for framework netstandard2.0
-        And project A/A/A.csproj should reference ../../C/C/C.csproj for framework net5.0
-        And solution A should include ../B/B/B.csproj, ../C/C/C.csproj
+        When merging solutions: A, B, C, D
+        Then project A/A/A.csproj should reference ../../B/BA/BA.csproj for framework netstandard2.0
+        Then project A/A/A.csproj should reference ../../B/BB/BB.csproj for framework netstandard2.0
+        And project A/A/A.csproj should reference ../../C/CA/CA.csproj for framework net5.0
+        And project A/A/A.csproj should reference ../../C/CB/CB.csproj for framework net5.0
+        And project A/A/A.csproj should reference ../../D/DA/DA.csproj
+        And project A/A/A.csproj should reference ../../D/DB/DB.csproj
+        And project B/BA/BA.csproj should reference ../../D/DA/DA.csproj
+        And project B/BA/BA.csproj should reference ../../D/DB/DB.csproj
+        And project C/CA/CA.csproj should reference ../../D/DA/DA.csproj
+        And project C/CA/CA.csproj should reference ../../D/DB/DB.csproj
+        And project A/A/A.csproj should have 6 item groups
+        And project B/BA/BA.csproj should have 2 item groups
+        And project C/CA/CA.csproj should have 2 item groups
+        And solution A should include ../B/BA/BA.csproj, ../B/BB/BB.csproj, ../C/CA/CA.csproj, ../C/CB/CB.csproj
+        And solution B should include ../D/DA/DA.csproj, ../D/DB/DB.csproj
+        And solution C should include ../D/DA/DA.csproj, ../D/DB/DB.csproj
 

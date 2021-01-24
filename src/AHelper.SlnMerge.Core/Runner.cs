@@ -73,9 +73,11 @@ namespace AHelper.SlnMerge.Core
                 }
 
                 await workspace.CommitChangesAsync(false);
-                _outputWriter.PrintComplete(workspace.Solutions.SelectMany(sln => sln.Changes.Select(change => change.Key))
-                                                               .Distinct()
-                                                               .Count());
+                _outputWriter.PrintComplete(await workspace.Solutions
+                                                           .Select(sln => sln.Projects.Value)
+                                                           .WhenAll(projects => projects.SelectMany(projs => projs)
+                                                                                        .Where(proj => proj.Changes.Any())
+                                                                                        .Count()));
             }
             catch (Exception ex)
             {

@@ -62,6 +62,22 @@ namespace AHelper.SlnMerge.Core
             }
         }
 
+        public async Task PruneProjectsAsync(Workspace workspace)
+        {
+            var projects = await Projects.Value;
+            var removedProjects = projects.SelectMany(proj => proj.Changes)
+                                          .Where(change => change.ChangeType == ChangeType.Removed)
+                                          .Select(change => change.Project)
+                                          .Distinct();
+            var referencedProjects = projects.SelectMany(proj => proj.GetProjectReferences(workspace))
+                                             .Distinct();
+
+            foreach(var proj in removedProjects.Where(proj => !referencedProjects.Contains(proj)))
+            {
+                Changes.Add(new KeyValuePair<Project, ChangeType>(proj, ChangeType.Removed));
+            }
+        }
+
         internal async Task ReplaceProjects(IEnumerable<Project> projects)
         {
             var myProjects = await Projects.Value;
