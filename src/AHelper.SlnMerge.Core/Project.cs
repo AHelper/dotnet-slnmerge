@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 
 namespace AHelper.SlnMerge.Core
@@ -15,6 +16,7 @@ namespace AHelper.SlnMerge.Core
     {
         public IList<string> Frameworks { get; set; } = new List<string>();
         public string Include { get; set; }
+        public string Origin { get; set; }
     }
 
     public class Change
@@ -90,13 +92,16 @@ namespace AHelper.SlnMerge.Core
                     reference.Frameworks.Add(targetFramework);
                 }
 
-                foreach (var include in GetItems(msbuildProject, "ProjectReference"))
+                foreach (var item in msbuildProject.GetItems("ProjectReference"))
                 {
+                    var include = item.EvaluatedInclude;
+
                     if (!projectReferences.TryGetValue(include, out var reference))
                     {
                         reference = new Reference
                         {
-                            Include = include
+                            Include = include,
+                            Origin = item.GetMetadataValue("Origin")
                         };
                         projectReferences.Add(include, reference);
                     }
@@ -150,17 +155,28 @@ namespace AHelper.SlnMerge.Core
                                                                             Framework = framework, 
                                                                             Project = workspace.PackageLookup[reference.Include] 
                                                                         })));
+        public void RemoveReferences(Workspace workspace)
+            => ProjectReferences.Where(reference => reference.Origin == "slnmerge")
+                                .SelectMany(reference => reference.Frameworks.Select(framework => (reference, framework)))
+                                .ForEach(tuple => Changes.Add(new Change
+                                                              {
+                                                                  ChangeType = ChangeType.Removed,
+                                                                  Framework = tuple.framework,
+                                                                  Project = workspace.PackageLookup.Values.First(p => p.Filepath == Path.GetFullPath(tuple.reference.Include, Path.GetDirectoryName(Filepath)))
+                                                              }));
 
         public void WriteChanges()
         {
-            var project = Microsoft.Build.Construction.ProjectRootElement.Open(Filepath, new ProjectCollection(), true);
+            var project = ProjectRootElement.Open(Filepath, new ProjectCollection(), true);
             var changes = Changes.GroupBy(change => change.Project)
                                  .Select(change => TargetFrameworks.All(tf => change.Any(c => c.Framework == tf))
                                      ? (change.Key, frameworks: new[] { "" }) 
                                      : (change.Key, frameworks: change.Select(c => c.Framework)))
                                  .SelectMany(tuple => tuple.frameworks.Select(framework => (tuple.Key, framework)));
+            var changeTypeDict = Changes.DistinctBy(change => change.Project)
+                                        .ToDictionary(c => c.Project, c => c.ChangeType);
 
-            foreach (var change in changes)
+            foreach (var change in changes.Where(c => changeTypeDict[c.Key] == ChangeType.Added))
             {
                 var itemGroup = project.ItemGroups.FirstOrDefault(ig => IsConditionForFramework(ig.Condition, change.framework) && DoesItemGroupContainProjectReference(ig));
 
@@ -178,13 +194,35 @@ namespace AHelper.SlnMerge.Core
                 item.AddMetadata("Origin", "slnmerge", true);
             }
 
+            foreach (var change in changes.Where(c => changeTypeDict[c.Key] == ChangeType.Removed))
+            {
+                var item = project.ItemGroups
+                                  .SelectMany(ig => ig.Items)
+                                  .FirstOrDefault(item => item.ElementName == "ProjectReference"
+                                                          && Path.GetFullPath(item.Include, Path.GetDirectoryName(Filepath)) == change.Key.Filepath);
+
+                if (item == null)
+                {
+                    _outputWriter.PrintWarning(new Exception($"Could not find ProjectReference to remove for {change.Key.Filepath}"));
+                    continue;
+                }
+
+                var itemGroup = item.Parent as ProjectItemGroupElement;
+                itemGroup.RemoveChild(item);
+
+                if (!itemGroup.Children.Any())
+                {
+                    itemGroup.Parent.RemoveChild(itemGroup);
+                }
+            }
+
             project.Save();
 
             bool IsConditionForFramework(string condition, string framework)
                 => framework == string.Empty && condition == string.Empty ||
-                   Regex.IsMatch(condition, $"'$(TargetFramework)'\\s*==\\s*'{framework}'");
+                   Regex.IsMatch(condition, $"'\\$\\(TargetFramework\\)'\\s*==\\s*'{framework}'");
 
-            bool DoesItemGroupContainProjectReference(Microsoft.Build.Construction.ProjectItemGroupElement itemGroup)
+            bool DoesItemGroupContainProjectReference(ProjectItemGroupElement itemGroup)
                 => itemGroup.Children.Any(item => item.ElementName == "ProjectReference");
         }
 
@@ -246,8 +284,12 @@ namespace AHelper.SlnMerge.Core
         }
 
         public IEnumerable<Project> GetProjectReferences(Workspace workspace)
-            => ProjectReferences.Select(reference => Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath)))
-                                .Join(workspace.PackageLookup.Values, path => path, proj => proj.Filepath, (path, proj) => proj)
-                                .Concat(Changes.Select(kvp => kvp.Project));
+            => ProjectReferences.Select(reference => (reference, path: Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath))))
+                                .Join(workspace.PackageLookup.Values, tuple => tuple.path, proj => proj.Filepath, (tuple, proj) => (tuple.reference, proj))
+                                .Where(tuple => tuple.reference.Frameworks.Any(fw => !Changes.Any(c => c.ChangeType == ChangeType.Removed && c.Project == tuple.proj && fw == c.Framework)))
+                                .Select(tuple => tuple.proj)
+                                .Concat(Changes.Where(change => change.ChangeType == ChangeType.Added)
+                                               .Select(kvp => kvp.Project))
+                                .Distinct();
     }
 }

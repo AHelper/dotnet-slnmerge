@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace AHelper.SlnMerge.Core
         public static Task WhenAll<T>(this IEnumerable<Task<T>> enumerable, Action<IEnumerable<T>> predicate)
             => Task.WhenAll(enumerable).ContinueWith(task => predicate(task.Result));
 
-        public static Task<IEnumerable<TOut>> WhenAll<TIn, TOut>(this IEnumerable<Task<TIn>> enumerable, Func<IEnumerable<TIn>, IEnumerable<TOut>> predicate)
+        public static Task<TOut> WhenAll<TIn, TOut>(this IEnumerable<Task<TIn>> enumerable, Func<IEnumerable<TIn>, TOut> predicate)
             => Task.WhenAll(enumerable).ContinueWith(task => predicate(task.Result));
 
         public static Task<List<T>> ToListAsync<T>(this Task<IEnumerable<T>> enumerable)

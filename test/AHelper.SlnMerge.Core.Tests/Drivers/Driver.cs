@@ -38,7 +38,11 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
             try
             {
-                RunProcess("dotnet", "nuget", "locals", "all", "-c");
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")))
+                {
+                    RunProcess("dotnet", "nuget", "locals", "all", "-c");
+                }
+
                 RunProcess("pwsh", "-File", filename);
             }
             finally
@@ -100,6 +104,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             var project = new MSBuildProject(Path.Combine(_projectPath, projectPath), new Dictionary<string, string>(), null, projectCollection);
             var items = project.GetItems("ProjectReference");
             var actualReferences = items.Select(item => item.EvaluatedInclude).Select(NormalizePaths).ToList();
+            Assert.All(actualReferences, reference => Assert.Equal(1, actualReferences.Count(r => r == reference)));
             Assert.All(references, reference => Assert.Contains(reference, actualReferences));
             Assert.All(references, reference => Assert.Equal("slnmerge", items.FirstOrDefault(item => NormalizePaths(item.EvaluatedInclude) == reference)?.GetMetadataValue("Origin")));
         }
@@ -140,6 +145,13 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             var items = project.GetItems("ProjectReference");
             var actualReferences = items.Select(item => item.EvaluatedInclude).Select(NormalizePaths).ToList();
             Assert.All(references, reference => Assert.DoesNotContain(reference, actualReferences));
+        }
+
+        public void CheckNumberOfItemGroups(string projectPath, int numItemGroups)
+        {
+            using var projectCollection = new ProjectCollection();
+            var project = Microsoft.Build.Construction.ProjectRootElement.Open(Path.Combine(_projectPath, projectPath), projectCollection, true);
+            Assert.Equal(numItemGroups, project.ItemGroups.Count);
         }
 
         public void CheckSolution(string solution, IEnumerable<string> projects)
@@ -223,10 +235,11 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             var output = process.StandardOutput.ReadToEnd();
             var err = process.StandardError.ReadToEnd();
             process.WaitForExit();
-            Assert.Equal(0, process.ExitCode);
 
             OutputHelper?.WriteLine(output);
             OutputHelper?.WriteLine(err);
+
+            Assert.Equal(0, process.ExitCode);
 
             return output.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
         }
