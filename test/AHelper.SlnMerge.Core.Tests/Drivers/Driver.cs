@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -17,6 +18,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         public ITestOutputHelper OutputHelper { get; set; }
         private string _projectPath;
         private readonly Mock<IOutputWriter> _outputWriterMock;
+        private static readonly SemaphoreSlim _powershellLock = new SemaphoreSlim(1);
 
         private Exception OutputException => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintException))?.Arguments[0] as Exception;
         private Exception OutputWarning => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintWarning))?.Arguments[0] as Exception;
@@ -30,8 +32,20 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
                              .Callback((Exception ex) => OutputHelper?.WriteLine(ex.ToString()));
         }
 
-        public void GenerateProjects(string filename)
-            => RunProcess("pwsh", "-File", filename);
+        public async Task GenerateProjects(string filename)
+        {
+            await _powershellLock.WaitAsync();
+
+            try
+            {
+                RunProcess("dotnet", "nuget", "locals", "all", "-c");
+                RunProcess("pwsh", "-File", filename);
+            }
+            finally
+            {
+                _powershellLock.Release();
+            }
+        }
 
         public void SetTestProject(string name)
             => _projectPath = Path.Join("Resources", name);
@@ -163,6 +177,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     WorkingDirectory = _projectPath ?? "Resources"
                 }
             };
@@ -173,8 +188,12 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
             process.Start();
             var output = process.StandardOutput.ReadToEnd();
+            var err = process.StandardError.ReadToEnd();
             process.WaitForExit();
             Assert.Equal(0, process.ExitCode);
+
+            OutputHelper?.WriteLine(output);
+            OutputHelper?.WriteLine(err);
 
             return output.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
         }
