@@ -15,6 +15,7 @@
     <None Include="Resources\Build-Nuspec.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build-PackageId.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build-Precedence.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Build-SlnFolder.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\Build.ps1" CopyToOutputDirectory="always" />
     <None Include="Resources\Common.psm1" CopyToOutputDirectory="Always" />
     <None Include="Resources\FailureConditions\Build-AmbiguousSolution.ps1" CopyToOutputDirectory="Always" />
