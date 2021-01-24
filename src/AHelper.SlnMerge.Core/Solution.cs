@@ -1,3 +1,4 @@
+using Microsoft.Build.Construction;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -72,7 +73,7 @@ namespace AHelper.SlnMerge.Core
             var referencedProjects = projects.SelectMany(proj => proj.GetProjectReferences(workspace))
                                              .Distinct();
 
-            foreach(var proj in removedProjects.Where(proj => !referencedProjects.Contains(proj)))
+            foreach (var proj in removedProjects.Where(proj => !referencedProjects.Contains(proj)))
             {
                 Changes.Add(new KeyValuePair<Project, ChangeType>(proj, ChangeType.Removed));
             }
@@ -87,11 +88,10 @@ namespace AHelper.SlnMerge.Core
         }
 
         private IList<string> GetProjectPaths()
-            => CliRunner.ExecuteDotnet(false, "sln", Filepath, "list")
-                            .Split('\n', '\r')
-                            .Where(path => !string.IsNullOrWhiteSpace(path))
-                            .Skip(2) // `dotnet sln list` includes 2-line header
-                            .ToList();
+            => SolutionFile.Parse(Filepath).ProjectsInOrder
+                           .Select(proj => proj.RelativePath)
+                           .ToList();
+
         private Task<List<Project>> GetProjectsAsync()
             => GetProjectPaths().Select(path => Project.CreateAsync(path, this, _outputWriter))
                                 .WhenAll()
