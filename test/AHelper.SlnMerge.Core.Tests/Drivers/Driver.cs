@@ -76,6 +76,24 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             }
         }
 
+        public async Task UndoMergesAsync(IEnumerable<string> solutions)
+        {
+            try
+            {
+                await new Runner(_outputWriterMock.Object).RunAsync(new RunnerOptions
+                {
+                    Solutions = solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(),
+                    Undo = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Assert.Null(ex);
+            }
+
+            Assert.Null(OutputException);
+        }
+
         public void CheckReferences(string projectPath, IEnumerable<string> references)
         {
             using var projectCollection = new ProjectCollection();
@@ -115,10 +133,25 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             }
         }
 
+        public void CheckNotReferenced(string projectPath, IEnumerable<string> references)
+        {
+            using var projectCollection = new ProjectCollection();
+            var project = new MSBuildProject(Path.Combine(_projectPath, projectPath), new Dictionary<string, string>(), null, projectCollection);
+            var items = project.GetItems("ProjectReference");
+            var actualReferences = items.Select(item => item.EvaluatedInclude).Select(NormalizePaths).ToList();
+            Assert.All(references, reference => Assert.DoesNotContain(reference, actualReferences));
+        }
+
         public void CheckSolution(string solution, IEnumerable<string> projects)
         {
             var actualProjects = RunProcess("dotnet", "sln", solution, "list").Skip(2).Select(NormalizePaths).ToList();
             Assert.All(projects, project => Assert.Contains(project, actualProjects));
+        }
+
+        public void CheckProjectsNotInSolution(string solution, IEnumerable<string> projects)
+        {
+            var actualProjects = RunProcess("dotnet", "sln", solution, "list").Skip(2).Select(NormalizePaths).ToList();
+            Assert.All(projects, project => Assert.DoesNotContain(project, actualProjects));
         }
 
         public void CheckAmbiguousSolutionException(IEnumerable<string> solutionPaths)

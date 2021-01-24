@@ -22,6 +22,9 @@ namespace AHelper.SlnMerge.Core
         [Option('v', "verbosity", HelpText = "Set verbosity (verbose|info|warning|error|off)", Default = TraceLevel.Info)]
         public TraceLevel Verbosity { get; set; }
 
+        [Option('u', "undo", HelpText = "Removes ProjectReferences that this tool has added", Default = false)]
+        public bool Undo { get; set; }
+
         public IDictionary<string, string> Properties => PropertyStrings.Select(str => str.Split('=', 2))
                                                                         .Where(pair => pair.Length == 2)
                                                                         .ToDictionary(pair => pair[0], pair => pair[1]);
@@ -57,9 +60,18 @@ namespace AHelper.SlnMerge.Core
                 var workspace = await Workspace.CreateAsync(_outputWriter, options.Solutions);
                 await LogWorkspaceSolutionsAsync(workspace);
 
-                await workspace.AddReferencesAsync();
-                await workspace.CheckForCircularReferences();
-                await workspace.PopulateSolutionsAsync();
+                if (options.Undo)
+                {
+                    await workspace.RemoveReferencesAsync();
+                    await workspace.CleanupSolutionsAsync();
+                }
+                else
+                {
+                    await workspace.AddReferencesAsync();
+                    await workspace.CheckForCircularReferences();
+                    await workspace.PopulateSolutionsAsync();
+                }
+
                 await workspace.CommitChangesAsync(false);
                 _outputWriter.PrintComplete(workspace.Solutions.SelectMany(sln => sln.Changes.Select(change => change.Key))
                                                                .Distinct()

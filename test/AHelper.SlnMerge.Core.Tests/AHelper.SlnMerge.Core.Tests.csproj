@@ -24,6 +24,7 @@
     <None Include="Resources\FailureConditions\Build-MissingCsproj.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\FailureConditions\Build-MissingNuspec.ps1" CopyToOutputDirectory="Always" />
     <None Include="Resources\FailureConditions\Build-MissingSln.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\Undo\Build-BasicUndo.ps1" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
