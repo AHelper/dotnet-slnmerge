@@ -4,24 +4,80 @@ A .NET CLI tool to automatically merge projects in multiple solutions, adding `<
 ## Usage
 Install the tool globally with:
 ```
-dotnet tool install --global AHelper.SlnMerge
+dotnet tool install --global dotnet-tool-slnmerge
 ```
 Merge projects from one or more solutions into another:
 ```
 slnmerge dest.sln source.sln
 ```
+Undo the merge operation with:
+```
+slnmerge -u dest.sln source.sln
+```
 
 ## Why?
-I find myself having to debug changes in different projects across multiple solutions at once that normally use `<PackageReference>`s.  Adding these as `<ProjectReference>`s and adding to the solution simplifies debugging.
+I find myself having to debug changes in different projects across multiple solutions at once that normally use `<PackageReference>`s.  Adding these as `<ProjectReference>`s and adding to the solution simplifies debugging.  For large projects with multiple repositories, this can be a very tedious task to set up by hand.
 
-Example:
+## Example
+Take the 3 solutions in separate repositories checked out locally:
+```
+/repos/
+ |- Server/
+ |   \- Server.sln
+ |       \- src/Server/Server.csproj
+ |            Package References
+ |             \- Data
+ |- Data/
+ |   \- Data.sln
+ |       \- src/Data/Data.csproj
+ |            Package References
+ |             \- Core
+ \- Core/
+     \- Core.sln
+         \- src/Core/Core.csproj
+```
 
-3 projects in separate git repositories: Server, Data, Core.
+Run:
+```
+PS /repos> slnmerge Server Data Core
+```
+_Tip: You can specify a solution file or a folder containing one._
 
-Server is an executable AspNetCore project, Data and Core are classlibs.
+The structure afterwards:
+```
+/repos/
+ |- Server/
+ |   \- Server.sln
+ |       |- src/Server/Server.csproj
+ |       |    Package References
+ |       |     \- Data
+ |       |    Project References
+ |       |     \- ../../../Data/src/Data/Data.csproj
+ |       |- ../Data/src/Data/Data.csproj
+ |       |    Package References
+ |       |     \- Core
+ |       |    Project References
+ |       |     \- ../../../Core/src/Core/Core.csproj
+ |       \- ../Core/src/Core/Core.csproj
+ |
+ |- Data/
+ |   \- Data.sln
+ |       |- src/Data/Data.csproj
+ |       |    Package References
+ |       |     \- Core
+ |       |    Project References
+ |       |     \- ../../../Core/src/Core/Core.csproj
+ |       \- src/Core/Core.csproj
+ \- Core/
+     \- Core.sln
+         \- src/Core/Core.csproj
+```
 
-Data and Core publish nugets to a private feed in release mode, no debug symbols available.
+The result of slnmerge are projects that have a ProjectReference added for every local project that it finds that corresponds to a PackageReference.  Solutions are also updated to include those newly reference projects.
 
-Server -> Data -> Core.
+If you open Server.sln in an IDE, you can modify sources and set breakpoints in Core and debug Server with those changes.
 
-In order to debug a change in Core from Server, you must get the new DLLs and PDBs in Server.  The easiest way I have found is to simply directly reference the projects and allow MSBuild to handle copying DLLs and PDBs.
+If you wish to remove the references added by this tool without reverting all changes in .csproj and .sln files:
+```
+PS /repos> slnmerge --undo Server Data
+```
