@@ -89,6 +89,7 @@ namespace AHelper.SlnMerge.Core
 
         private IList<string> GetProjectPaths()
             => SolutionFile.Parse(Filepath).ProjectsInOrder
+                           .Where(proj => proj.ProjectType != SolutionProjectType.SolutionFolder)
                            .Select(proj => proj.RelativePath)
                            .ToList();
 

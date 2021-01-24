@@ -60,6 +60,12 @@ Feature: merging solutions: without options
         And project A/AD/AD.csproj should reference ../../B/BD/BD.csproj
         And solution A should include ../B/BA/BA.csproj, ../B/BB/BB.csproj, ../B/BC/BC.csproj, ../B/BD/BD.csproj
 
+    Scenario: Solution folder
+        Given test project "SlnFolder" created with "Build-SlnFolder.ps1"
+        When merging solutions: A, B
+        Then project A/src/A/A.csproj should reference ../../../B/B/B.csproj
+        And solution A should include ../B/B/B.csproj
+
     Scenario: LocalSln
         Given test project "LocalSln" created with "Build-LocalSln.ps1"
         When merging the local solution with: A
