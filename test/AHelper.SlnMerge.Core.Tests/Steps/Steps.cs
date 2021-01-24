@@ -49,9 +49,17 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         public Task WhenMergeSolutionsWithExceptionsAsync(string names)
             => _driver.MergeSolutionsAsync(Split(names), false);
 
+        [When(@"undoing merges in solutions: (.*)")]
+        public Task WhenUndoingMergesInSolutions(string paths)
+            => _driver.UndoMergesAsync(Split(paths));
+
         [Then(@"project (.*) should reference ([^\s]*)")]
         public void ThenCheckReferences(string project, string references)
             => _driver.CheckReferences(project, Split(references));
+
+        [Then(@"project (.*) should not reference ([^\s]*)")]
+        public void ThenCheckNotReferenced(string project, string references)
+            => _driver.CheckNotReferenced(project, Split(references));
 
         [Then(@"project (.*) should reference ([^\s]*) for framework ([^\s]*)")]
         public void ThenCheckReferences(string project, string references, string framework)
@@ -60,6 +68,10 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         [Then(@"solution (.*) should include (.*)")]
         public void ThenCheckSolution(string solution, string projects)
             => _driver.CheckSolution(solution, Split(projects));
+
+        [Then(@"solution (.*) should not include (.*)")]
+        public void ThenCheckNotInSolution(string solution, string projects)
+            => _driver.CheckProjectsNotInSolution(solution, Split(projects));
 
         [Then("it should not throw any exceptions")]
         public void ThenCheckNoExceptions()
