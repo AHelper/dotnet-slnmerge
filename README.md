@@ -1,10 +1,10 @@
-# slnmerge
+# dotnet-slnmerge
 A .NET CLI tool to automatically merge projects in multiple solutions, adding `<ProjectReference>`s when a corresponding `<PackageReference>` is found.
 
 ## Usage
 Install the tool globally with:
 ```
-dotnet tool install --global dotnet-tool-slnmerge
+dotnet tool install --global dotnet-slnmerge
 ```
 Merge projects from one or more solutions into another:
 ```
