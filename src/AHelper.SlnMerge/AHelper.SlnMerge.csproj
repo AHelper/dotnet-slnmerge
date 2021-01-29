@@ -6,8 +6,21 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>slnmerge</ToolCommandName>
     <AssemblyName>slnmerge</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <PackageId>dotnet-slnmerge</PackageId>
-    <Copyright>Copyright (C) 2020-2021</Copyright>
+    <Authors>Collin Eggert</Authors>
+    <Copyright>Copyright (C) 2020-2021 Collin Eggert</Copyright>
+    <Description>
+        A .NET CLI tool to automatically merge projects in multiple solutions, adding `&lt;ProjectReference&gt;`s when a corresponding `&lt;PackageReference&gt;` is found.
+    </Description>
+    <RepositoryUrl>https://gitlab.com/dotnet-slnmerge/dotnet-slnmerge.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>solution;merge</PackageTags>
+    <PackageProjectUrl>https://gitlab.com/dotnet-slnmerge/dotnet-slnmerge</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
