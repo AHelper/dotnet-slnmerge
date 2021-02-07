@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<DifferentSlnName>
+  <A>
+    <A>
+      <A.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="B" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
+]]></A.csproj>
+    </A>
+    <Test.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A", "A\A.csproj", "{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Debug|x64.Build.0 = Debug|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Debug|x86.Build.0 = Debug|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Release|x64.ActiveCfg = Release|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Release|x64.Build.0 = Release|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Release|x86.ActiveCfg = Release|Any CPU
+		{A8067BA8-30AC-47FA-A04D-8DBE1422B1CB}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></Test.sln>
+  </A>
+  <B>
+    <B>
+      <B.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+]]></B.csproj>
+    </B>
+    <Test.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B", "B\B.csproj", "{FF610189-EF11-4A0B-9753-4AF6F7376DFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Release|x64.Build.0 = Release|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF610189-EF11-4A0B-9753-4AF6F7376DFB}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></Test.sln>
+  </B>
+  <Directory.Build.targets><![CDATA[<Project>
+    <PropertyGroup>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)feed</PackageOutputPath>
+    </PropertyGroup>
+</Project>
+]]></Directory.Build.targets>
+  <nuget.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+    <clear />
+    <add key="feed" value="./feed/" />
+  </packageSources>
+</configuration>
+]]></nuget.config>
+</DifferentSlnName>

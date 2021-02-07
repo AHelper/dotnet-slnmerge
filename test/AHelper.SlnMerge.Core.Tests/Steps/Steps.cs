@@ -18,16 +18,9 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
             _driver.OutputHelper = outputHelper;
         }
 
-        [Given(@"test projects created with ""(.*)""")]
-        public Task GivenTestGeneratorScriptName(string filename)
+        [Given(@"test project created with ""(.*)""")]
+        public void GivenTestGeneratorScriptName(string filename)
             => _driver.GenerateProjects(filename);
-
-        [Given(@"test project ""(.*)"" created with ""(.*)""")]
-        public async Task GivenTestProjectAndGeneratorScriptName(string project, string filename)
-        {
-            await _driver.GenerateProjects(filename);
-            _driver.SetTestProject(project);
-        }
 
         [Given(@"a test project ""(.*)""")]
         public void GivenTestProject(string name)

@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Precedence>
+  <A>
+    <AA>
+      <AA.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="B.AssemblyName" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
+]]></AA.csproj>
+    </AA>
+    <AB>
+      <AB.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="B.PackageId" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
+]]></AB.csproj>
+    </AB>
+    <AC>
+      <AC.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="B.Nuspec" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
+]]></AC.csproj>
+    </AC>
+    <AD>
+      <AD.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="B.Directory.Build.targets" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
+]]></AD.csproj>
+    </AD>
+    <A.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AA", "AA\AA.csproj", "{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AB", "AB\AB.csproj", "{689E9746-EF8C-4C53-87EF-38D432601FDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AC", "AC\AC.csproj", "{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AD", "AD\AD.csproj", "{36ADB995-5931-4E81-91F0-AAF404E279B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Debug|x64.Build.0 = Debug|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Release|x64.ActiveCfg = Release|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Release|x64.Build.0 = Release|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{1EEDB4B1-AB1F-473A-8D02-DAF2A70104CE}.Release|x86.Build.0 = Release|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Debug|x64.Build.0 = Debug|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Debug|x86.Build.0 = Debug|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Release|x64.ActiveCfg = Release|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Release|x64.Build.0 = Release|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Release|x86.ActiveCfg = Release|Any CPU
+		{689E9746-EF8C-4C53-87EF-38D432601FDE}.Release|x86.Build.0 = Release|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Debug|x64.Build.0 = Debug|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Debug|x86.Build.0 = Debug|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Release|x64.ActiveCfg = Release|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Release|x64.Build.0 = Release|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Release|x86.ActiveCfg = Release|Any CPU
+		{46FA5ACC-1E04-40C9-8A3C-E55ED0A4DAFE}.Release|x86.Build.0 = Release|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Debug|x64.Build.0 = Debug|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Debug|x86.Build.0 = Debug|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Release|x64.ActiveCfg = Release|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Release|x64.Build.0 = Release|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Release|x86.ActiveCfg = Release|Any CPU
+		{36ADB995-5931-4E81-91F0-AAF404E279B3}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></A.sln>
+  </A>
+  <B>
+    <BA>
+      <BA.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>B.AssemblyName</AssemblyName>
+    <PackageId>B.PackageId</PackageId>
+  </PropertyGroup>
+</Project>]]></BA.csproj>
+    </BA>
+    <BB>
+      <BB.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>B.AssemblyName</AssemblyName>
+  </PropertyGroup>
+</Project>]]></BB.csproj>
+    </BB>
+    <BC>
+      <BC.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>B.AssemblyName</AssemblyName>
+    <NuspecFile>BC.nuspec</NuspecFile>
+    <PackageId>B.PackageId</PackageId>
+  </PropertyGroup>
+</Project>]]></BC.csproj>
+      <BC.nuspec><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <!-- Required elements-->
+        <id>B.Nuspec</id>
+        <version>1.0.0</version>
+        <description>description</description>
+        <authors>authors</authors>
+        <dependencies>
+            <group targetFramework=".NETStandard2.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin/Debug/netstandard2.0/B.AssemblyName.dll" target="lib/netstandard2.0" />
+    </files>
+</package>
+]]></BC.nuspec>
+    </BC>
+    <BD>
+      <BD.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>B.AssemblyName</AssemblyName>
+    <PackageId>B.PackageId</PackageId>
+  </PropertyGroup>
+</Project>]]></BD.csproj>
+      <Directory.Build.targets><![CDATA[<Project>
+    <PropertyGroup>
+        <PackageId>B.Directory.Build.targets</PackageId>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)../../feed</PackageOutputPath>
+    </PropertyGroup>
+</Project>
+]]></Directory.Build.targets>
+    </BD>
+    <B.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA", "BA\BA.csproj", "{B6C111C5-2355-4799-81A6-5DD364FF9790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BB", "BB\BB.csproj", "{89F71BC7-37F8-43E8-AD8C-89C73420590E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BC", "BC\BC.csproj", "{72B6C83C-E91B-465C-AB16-28138A2B926B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD", "BD\BD.csproj", "{231BBFD3-BCB5-4302-A88C-6233530E5554}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Debug|x64.Build.0 = Debug|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Debug|x86.Build.0 = Debug|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Release|x64.ActiveCfg = Release|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Release|x64.Build.0 = Release|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Release|x86.ActiveCfg = Release|Any CPU
+		{B6C111C5-2355-4799-81A6-5DD364FF9790}.Release|x86.Build.0 = Release|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Debug|x64.Build.0 = Debug|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Debug|x86.Build.0 = Debug|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Release|x64.ActiveCfg = Release|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Release|x64.Build.0 = Release|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Release|x86.ActiveCfg = Release|Any CPU
+		{89F71BC7-37F8-43E8-AD8C-89C73420590E}.Release|x86.Build.0 = Release|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Debug|x64.Build.0 = Debug|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Debug|x86.Build.0 = Debug|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Release|x64.ActiveCfg = Release|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Release|x64.Build.0 = Release|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Release|x86.ActiveCfg = Release|Any CPU
+		{72B6C83C-E91B-465C-AB16-28138A2B926B}.Release|x86.Build.0 = Release|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Debug|x64.Build.0 = Debug|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Debug|x86.Build.0 = Debug|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Release|x64.ActiveCfg = Release|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Release|x64.Build.0 = Release|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Release|x86.ActiveCfg = Release|Any CPU
+		{231BBFD3-BCB5-4302-A88C-6233530E5554}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></B.sln>
+  </B>
+  <Directory.Build.targets><![CDATA[<Project>
+    <PropertyGroup>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)feed</PackageOutputPath>
+    </PropertyGroup>
+</Project>
+]]></Directory.Build.targets>
+  <nuget.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+    <clear />
+    <add key="feed" value="./feed/" />
+  </packageSources>
+</configuration>
+]]></nuget.config>
+</Precedence>

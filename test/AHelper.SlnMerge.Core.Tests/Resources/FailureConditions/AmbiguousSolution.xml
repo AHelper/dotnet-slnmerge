@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<AmbiguousSolution>
+  <A>
+    <A>
+      <A.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+]]></A.csproj>
+    </A>
+    <A.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A", "A\A.csproj", "{3FB39152-131B-4521-BDA4-FA060AC1D0AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Debug|x64.Build.0 = Debug|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Debug|x86.Build.0 = Debug|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Release|x64.ActiveCfg = Release|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Release|x64.Build.0 = Release|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Release|x86.ActiveCfg = Release|Any CPU
+		{3FB39152-131B-4521-BDA4-FA060AC1D0AA}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></A.sln>
+    <B.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+]]></B.sln>
+  </A>
+  <Directory.Build.targets><![CDATA[<Project>
+    <PropertyGroup>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)feed</PackageOutputPath>
+    </PropertyGroup>
+</Project>
+]]></Directory.Build.targets>
+  <nuget.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+    <clear />
+    <add key="feed" value="./feed/" />
+  </packageSources>
+</configuration>
+]]></nuget.config>
+</AmbiguousSolution>

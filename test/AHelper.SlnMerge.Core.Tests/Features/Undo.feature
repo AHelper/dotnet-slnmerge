@@ -1,9 +1,9 @@
-﻿Feature: Undoing merges to solutions
+﻿Feature: Undo
 	If slnmerge was used to merge 2 or more solutions, the tool should be able to remove
 	its changes to .csproj and .sln files.
 
 	Scenario: Undo basic merge
-		Given test project "BasicUndo" created with "Undo/Build-BasicUndo.ps1"
+		Given test project created with "Undo/BasicUndo.xml"
 		When merging solutions: A, B
 		And undoing merges in solutions: A, B
 		Then project A/A/A.csproj should not reference ../../B/B/B.csproj
@@ -12,7 +12,7 @@
 		And solution B/B.sln should include B/B.csproj
 
 	Scenario: Undo multi-framework merge
-		Given test project "MultiFrameworkUndo" created with "Undo/Build-MultiFrameworkUndo.ps1"
+		Given test project created with "Undo/MultiFrameworkUndo.xml"
 		When merging solutions: A, B, C, D
 		And undoing merges in solutions: A, B, C, D
 		Then project A/A/A.csproj should not reference ../../B/B/B.csproj

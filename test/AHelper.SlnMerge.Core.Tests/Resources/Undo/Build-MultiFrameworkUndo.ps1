@@ -1,4 +1,4 @@
-Import-Module ./Common.psm1
+Import-Module ../Common.psm1
 $ErrorActionPreference = "Stop"
 
 $directoryBuildTargets = Get-DirectoryBuildTargets

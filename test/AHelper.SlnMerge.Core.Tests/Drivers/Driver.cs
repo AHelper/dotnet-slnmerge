@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using MSBuildProject = Microsoft.Build.Evaluation.Project;
@@ -18,7 +19,6 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         public ITestOutputHelper OutputHelper { get; set; }
         private string _projectPath;
         private readonly Mock<IOutputWriter> _outputWriterMock;
-        private static readonly SemaphoreSlim _powershellLock = new SemaphoreSlim(1);
 
         private Exception OutputException => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintException))?.Arguments[0] as Exception;
         private Exception OutputWarning => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintWarning))?.Arguments[0] as Exception;
@@ -32,23 +32,18 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
                              .Callback((Exception ex) => OutputHelper?.WriteLine(ex.ToString()));
         }
 
-        public async Task GenerateProjects(string filename)
+        public void GenerateProjects(string filename)
         {
-            await _powershellLock.WaitAsync();
+            var doc = XDocument.Load(Path.Join("Resources", filename));
 
-            try
-            {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")))
-                {
-                    RunProcess("dotnet", "nuget", "locals", "all", "-c");
-                }
+            _projectPath = Path.Join("Resources", doc.Root.Name.LocalName);
 
-                RunProcess("pwsh", "-File", filename);
-            }
-            finally
+            if (Directory.Exists(_projectPath))
             {
-                _powershellLock.Release();
+                Directory.Delete(_projectPath, true);
             }
+
+            HandleNode(doc.Root, "Resources");
         }
 
         public void SetTestProject(string name)
@@ -249,5 +244,27 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
         private string NormalizeToProjectPath(string relativePath)
             => NormalizePaths(Path.GetFullPath(Path.Join(_projectPath, relativePath)));
+
+        private void HandleNode(XElement node, string path)
+        {
+            string nodePath = Path.Join(path, node.Name.LocalName);
+
+            if (node.FirstNode is XCData cdata)
+            {
+                File.WriteAllText(nodePath, cdata.Value);
+            }
+            else
+            {
+                Directory.CreateDirectory(nodePath);
+
+                foreach (var child in node.Nodes())
+                {
+                    if (child is XElement element)
+                    {
+                        HandleNode(element, nodePath);
+                    }
+                }
+            }
+        }
     }
 }

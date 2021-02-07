@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MultiFrameworkUndo>
+  <A>
+    <A>
+      <A.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="B" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="C" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="D" Version="1.0.0" />
+  </ItemGroup>
+</Project>]]></A.csproj>
+    </A>
+    <A.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A", "A\A.csproj", "{692851BB-F0E6-448A-9428-CF1E24F4EBDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Debug|x64.Build.0 = Debug|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Debug|x86.Build.0 = Debug|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Release|x64.ActiveCfg = Release|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Release|x64.Build.0 = Release|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Release|x86.ActiveCfg = Release|Any CPU
+		{692851BB-F0E6-448A-9428-CF1E24F4EBDB}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></A.sln>
+  </A>
+  <B>
+    <B>
+      <B.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="D" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
+]]></B.csproj>
+    </B>
+    <B.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B", "B\B.csproj", "{2DF697D5-951A-4D04-A639-8161E8EF9ECB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Debug|x64.Build.0 = Debug|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Debug|x86.Build.0 = Debug|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Release|x64.ActiveCfg = Release|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Release|x64.Build.0 = Release|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Release|x86.ActiveCfg = Release|Any CPU
+		{2DF697D5-951A-4D04-A639-8161E8EF9ECB}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></B.sln>
+  </B>
+  <C>
+    <C>
+      <C.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="D" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
+]]></C.csproj>
+    </C>
+    <C.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C", "C\C.csproj", "{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Debug|x64.Build.0 = Debug|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Debug|x86.Build.0 = Debug|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Release|x64.ActiveCfg = Release|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Release|x64.Build.0 = Release|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Release|x86.ActiveCfg = Release|Any CPU
+		{10DC3C86-E963-4536-ACFD-5F1FA8CD5AEC}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></C.sln>
+  </C>
+  <D>
+    <D>
+      <D.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+</Project>]]></D.csproj>
+    </D>
+    <D.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D", "D\D.csproj", "{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Debug|x64.Build.0 = Debug|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Debug|x86.Build.0 = Debug|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Release|x64.ActiveCfg = Release|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Release|x64.Build.0 = Release|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Release|x86.ActiveCfg = Release|Any CPU
+		{19A2536B-F2DF-4F9F-9397-5F65F7A909C4}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></D.sln>
+  </D>
+  <Directory.Build.targets><![CDATA[<Project>
+    <PropertyGroup>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)feed</PackageOutputPath>
+    </PropertyGroup>
+</Project>
+]]></Directory.Build.targets>
+  <nuget.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+    <clear />
+    <add key="feed" value="./feed/" />
+  </packageSources>
+</configuration>
+]]></nuget.config>
+</MultiFrameworkUndo>

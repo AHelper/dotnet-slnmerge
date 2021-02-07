@@ -5,28 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Resources\Build-AssemblyName.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-Basic.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-Chained.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-DifferentSlnName.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-DirectoryBuildTargets.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-LocalSln.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-MultiFramework.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-Nuspec.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-PackageId.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-Precedence.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build-SlnFolder.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Build.ps1" CopyToOutputDirectory="always" />
-    <None Include="Resources\Common.psm1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\FailureConditions\Build-AmbiguousSolution.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\FailureConditions\Build-CsprojNotInSln.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\FailureConditions\Build-Cyclic.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\FailureConditions\Build-DuplicatePackages.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\FailureConditions\Build-MissingCsproj.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\FailureConditions\Build-MissingNuspec.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\FailureConditions\Build-MissingSln.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Undo\Build-BasicUndo.ps1" CopyToOutputDirectory="Always" />
-    <None Include="Resources\Undo\Build-MultiFrameworkUndo.ps1" CopyToOutputDirectory="Always" />
+    <None Include="Resources\**\*.xml" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
