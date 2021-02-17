@@ -21,4 +21,4 @@ function Import-Children([string] $subpath, [System.Xml.XmlNode] $node) {
 
 Import-Children -subpath $Path -node ($doc.AppendChild($doc.CreateElement((Get-Item $Path).Name)))
 
-$doc.Save("$pwd\$Destination") >$null
+$doc.Save((Join-Path $pwd $Destination)) >$null

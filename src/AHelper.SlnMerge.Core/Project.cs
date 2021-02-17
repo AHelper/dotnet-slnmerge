@@ -94,7 +94,7 @@ namespace AHelper.SlnMerge.Core
 
                 foreach (var item in msbuildProject.GetItems("ProjectReference"))
                 {
-                    var include = item.EvaluatedInclude;
+                    var include = ConvertPathSeparators(item.EvaluatedInclude);
 
                     if (!projectReferences.TryGetValue(include, out var reference))
                     {
@@ -199,7 +199,7 @@ namespace AHelper.SlnMerge.Core
                 var item = project.ItemGroups
                                   .SelectMany(ig => ig.Items)
                                   .FirstOrDefault(item => item.ElementName == "ProjectReference"
-                                                          && Path.GetFullPath(item.Include, Path.GetDirectoryName(Filepath)) == change.Key.Filepath);
+                                                          && Path.GetFullPath(ConvertPathSeparators(item.Include), Path.GetDirectoryName(Filepath)) == change.Key.Filepath);
 
                 if (item == null)
                 {
@@ -291,5 +291,8 @@ namespace AHelper.SlnMerge.Core
                                 .Concat(Changes.Where(change => change.ChangeType == ChangeType.Added)
                                                .Select(kvp => kvp.Project))
                                 .Distinct();
+
+        private static string ConvertPathSeparators(string path)
+            => Regex.Replace(path, "[/\\\\]", Path.DirectorySeparatorChar.ToString());
     }
 }
