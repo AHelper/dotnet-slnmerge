@@ -27,8 +27,15 @@
 		And solution C/C.sln should include C/C.csproj
 		And solution C/C.sln should not include ../D/D/D.csproj
 
-    Scenario: Windows paths
+    Scenario: Undo with Windows paths
         Given test project created with "Undo/WindowsPaths.xml"
         When undoing merges in solutions: A, B
 		Then project A/A.csproj should not reference ../B/B.csproj
 		And solution A/A.sln should not include ../B/B.csproj
+
+    Scenario: Undo multiple merged projects
+        Given test project created with "Undo/UndoMultiple.xml"
+        When undoing merges in solutions: A, B
+        Then project A/src/AA/AA.csproj should not reference ../../../B/src/BA/BA.csproj
+        And project A/src/AB/AB.csproj should not reference ../../../B/src/BB/BB.csproj
+        And solution A/A.sln should not include ../B/src/BA/BA.csproj, ../B/src/BB/BB.csproj

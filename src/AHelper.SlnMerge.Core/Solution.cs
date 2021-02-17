@@ -70,10 +70,11 @@ namespace AHelper.SlnMerge.Core
                                           .Where(change => change.ChangeType == ChangeType.Removed)
                                           .Select(change => change.Project)
                                           .Distinct();
-            var referencedProjects = projects.SelectMany(proj => proj.GetProjectReferences(workspace))
+            var referencedProjects = projects.Except(removedProjects)
+                                             .SelectMany(proj => proj.GetProjectReferences(workspace))
                                              .Distinct();
 
-            foreach (var proj in removedProjects.Where(proj => !referencedProjects.Contains(proj)))
+            foreach (var proj in removedProjects.Except(referencedProjects))
             {
                 Changes.Add(new KeyValuePair<Project, ChangeType>(proj, ChangeType.Removed));
             }
