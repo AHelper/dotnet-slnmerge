@@ -32,3 +32,11 @@ Feature: Advanced merging
         And solution B should include ../D/DA/DA.csproj, ../D/DB/DB.csproj
         And solution C should include ../D/DA/DA.csproj, ../D/DB/DB.csproj
 
+    Scenario: Merge chain in multiple steps
+        Given test project created with "AdvancedMerging/MergeChain.xml"
+        When merging solutions: A, B
+        And merging solutions: B, C
+        And merging solutions with exceptions: A, B
+        Then solution A/A.sln should include ../B/BA/BA.csproj, ../B/BB/BB.csproj, ../C/C/C.csproj
+        And it should print warning FileReadException for 'C/C/C.csproj'
+

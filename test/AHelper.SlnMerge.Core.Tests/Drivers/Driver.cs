@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
@@ -20,8 +19,8 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         private string _projectPath;
         private readonly Mock<IOutputWriter> _outputWriterMock;
 
-        private Exception OutputException => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintException))?.Arguments[0] as Exception;
-        private Exception OutputWarning => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintWarning))?.Arguments[0] as Exception;
+        public Exception OutputException => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintException))?.Arguments[0] as Exception;
+        public Exception OutputWarning => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintWarning))?.Arguments[0] as Exception;
 
         public Driver()
         {
@@ -29,6 +28,8 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             _outputWriterMock.Setup(x => x.PrintTrace(It.IsAny<string>(), It.IsAny<object[]>()))
                              .Callback((string format, object[] args) => OutputHelper?.WriteLine(format, args));
             _outputWriterMock.Setup(x => x.PrintException(It.IsAny<Exception>()))
+                             .Callback((Exception ex) => OutputHelper?.WriteLine(ex.ToString()));
+            _outputWriterMock.Setup(x => x.PrintWarning(It.IsAny<Exception>()))
                              .Callback((Exception ex) => OutputHelper?.WriteLine(ex.ToString()));
         }
 
@@ -72,6 +73,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             if (shouldAssert)
             {
                 Assert.Null(OutputException);
+                Assert.Null(OutputWarning);
             }
         }
 
@@ -91,6 +93,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             }
 
             Assert.Null(OutputException);
+            Assert.Null(OutputWarning);
         }
 
         public void CheckReferences(string projectPath, IEnumerable<string> references)

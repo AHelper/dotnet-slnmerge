@@ -203,7 +203,7 @@ namespace AHelper.SlnMerge.Core
 
                 if (item == null)
                 {
-                    _outputWriter.PrintWarning(new Exception($"Could not find ProjectReference to remove for {change.Key.Filepath}"));
+                    _outputWriter.PrintWarning(new Exception($"Could not find ProjectReference in {Filepath} to remove for {change.Key.Filepath}"));
                     continue;
                 }
 
@@ -291,6 +291,9 @@ namespace AHelper.SlnMerge.Core
                                 .Concat(Changes.Where(change => change.ChangeType == ChangeType.Added)
                                                .Select(kvp => kvp.Project))
                                 .Distinct();
+
+        public override string ToString()
+            => $"Project({Filepath})";
 
         private static string ConvertPathSeparators(string path)
             => Regex.Replace(path, "[/\\\\]", Path.DirectorySeparatorChar.ToString());

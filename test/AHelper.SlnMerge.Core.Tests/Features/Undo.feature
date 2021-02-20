@@ -39,3 +39,12 @@
         Then project A/src/AA/AA.csproj should not reference ../../../B/src/BA/BA.csproj
         And project A/src/AB/AB.csproj should not reference ../../../B/src/BB/BB.csproj
         And solution A/A.sln should not include ../B/src/BA/BA.csproj, ../B/src/BB/BB.csproj
+
+    Scenario: Undo chained solutions
+        Given test project created with "Undo/UndoChain.xml"
+        When merging solutions: A, B, C
+        And undoing merges in solutions: A, B, C
+		Then solution A/A.sln should include A/A.csproj
+        And solution A/A.sln should not include ../B/BA/BA.csproj, ../B/BB/BB.csproj, ../C/C/C.csproj
+		Then solution B/B.sln should include BA/BA.csproj, BB/BB.csproj
+        And solution B/B.sln should not include ../C/C/C.csproj

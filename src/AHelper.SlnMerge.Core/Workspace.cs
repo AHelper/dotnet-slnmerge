@@ -151,11 +151,15 @@ namespace AHelper.SlnMerge.Core
                                    changes.Key == ChangeType.Added ? "add" : "remove"
                                }.Concat(changes.Select(change => change.Key.Filepath))
                                 .ToArray()));
+            }
 
-                foreach (var project in await sln.Projects)
-                {
-                    project.WriteChanges();
-                }
+            var projects = await Solutions.Select(sln => sln.Projects.Value)
+                                          .WhenAll(projs => projs.SelectMany(projs => projs)
+                                          .Distinct());
+
+            foreach(var proj in projects)
+            {
+                proj.WriteChanges();
             }
         }
 

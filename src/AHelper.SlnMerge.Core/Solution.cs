@@ -1,4 +1,5 @@
 using Microsoft.Build.Construction;
+using Microsoft.VisualBasic;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -74,9 +75,27 @@ namespace AHelper.SlnMerge.Core
                                              .SelectMany(proj => proj.GetProjectReferences(workspace))
                                              .Distinct();
 
-            foreach (var proj in removedProjects.Except(referencedProjects))
+            var open = new Queue<Project>(removedProjects.Except(referencedProjects));
+            var remaining = new List<Project>(projects);
+            var toBeRemoved = new List<Project>();
+
+            while (open.Any())
             {
+                var proj = open.Dequeue();
+                if (!remaining.Remove(proj))
+                {
+                    continue;
+                }
+
                 Changes.Add(new KeyValuePair<Project, ChangeType>(proj, ChangeType.Removed));
+
+                foreach (var projRef in proj.GetProjectReferences(workspace))
+                {
+                    if (!remaining.Any(r => r.GetProjectReferences(workspace).Contains(projRef)))
+                    {
+                        open.Enqueue(projRef);
+                    }
+                }
             }
         }
 
