@@ -116,7 +116,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
                                                                  projectCollection);
             var targetFrameworksValue = project.GetProperty("TargetFrameworks")?.EvaluatedValue ?? project.GetPropertyValue("TargetFramework");
 
-            foreach (var targetFramework in targetFrameworksValue.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            foreach (var targetFramework in targetFrameworksValue.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(framework => framework.Trim()))
             {
                 project.SetGlobalProperty("TargetFramework", targetFramework);
                 project.ReevaluateIfNecessary();

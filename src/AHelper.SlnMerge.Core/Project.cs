@@ -66,7 +66,7 @@ namespace AHelper.SlnMerge.Core
             var msbuildProject = new Microsoft.Build.Evaluation.Project(filepath, new Dictionary<string, string>(), null, projectCollection);
             var targetFrameworks = msbuildProject.GetProperty("TargetFrameworks") switch
             {
-                ProjectProperty pp => pp.EvaluatedValue.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+                ProjectProperty pp => pp.EvaluatedValue.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(val => val.Trim()).ToArray(),
                 null => new[] { msbuildProject.GetPropertyValue("TargetFramework") }
             };
 

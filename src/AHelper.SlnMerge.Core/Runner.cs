@@ -36,6 +36,7 @@ namespace AHelper.SlnMerge.Core
 
         static Runner()
         {
+            var instances = MSBuildLocator.QueryVisualStudioInstances().ToList();
             MSBuildLocator.RegisterDefaults();
         }
 
