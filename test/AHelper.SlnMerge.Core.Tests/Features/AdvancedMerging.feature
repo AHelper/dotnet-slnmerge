@@ -1,6 +1,12 @@
 Feature: Advanced merging
     Catch-all for testing features
 
+    Scenario: AspNetTest
+        Given test project created with "AdvancedMerging/AspNetTest.xml"
+        When merging solutions: AspNet, Library
+        Then project AspNet/AspNet/AspNet.csproj should reference ../../Library/Library.csproj
+        And solution AspNet should include ../Library/Library.csproj
+
     Scenario: Chained
         Given test project created with "AdvancedMerging/Chained.xml"
         When merging solutions: A, B, C, D

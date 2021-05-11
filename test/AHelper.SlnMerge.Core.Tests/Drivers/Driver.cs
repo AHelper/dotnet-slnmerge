@@ -99,7 +99,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         public void CheckReferences(string projectPath, IEnumerable<string> references)
         {
             using var projectCollection = new ProjectCollection();
-            var project = new MSBuildProject(Path.Combine(_projectPath, projectPath), new Dictionary<string, string>(), null, projectCollection);
+            var project = new MSBuildProject(Path.Combine(_projectPath, projectPath), new Dictionary<string, string>(), null, projectCollection, ProjectLoadSettings.IgnoreMissingImports | ProjectLoadSettings.IgnoreInvalidImports);
             var items = project.GetItems("ProjectReference");
             var actualReferences = items.Select(item => item.EvaluatedInclude).Select(NormalizePaths).ToList();
             Assert.All(actualReferences, reference => Assert.Equal(1, actualReferences.Count(r => r == reference)));

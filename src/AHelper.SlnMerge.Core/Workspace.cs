@@ -106,6 +106,34 @@ namespace AHelper.SlnMerge.Core
             }
         }
 
+        public async Task AddReferencesForLegacyAsync()
+        {
+            var projects = await Solutions.Select(sln => sln.Projects.Value)
+                                          .WhenAll(projs => projs.SelectMany(proj => proj)
+                                                                 .Distinct());
+
+            foreach (var project in projects)
+            {
+                if (!project.IsLegacy) continue;
+
+                var open = new List<Project>(project.GetProjectReferences(this));
+                var closed = new List<Project>();
+
+                while (open.Any())
+                {
+                    var item = open.First();
+                    open.Remove(item);
+
+                    if (closed.Contains(item)) continue;
+
+                    closed.Add(item);
+                    open.AddRange(item.GetProjectReferences(this));
+                }
+
+                project.AddReferences(closed, this);
+            }
+        }
+
         public async Task PopulateSolutionsAsync()
         {
             foreach (var sln in Solutions)

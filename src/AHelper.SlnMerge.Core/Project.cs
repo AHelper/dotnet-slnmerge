@@ -35,6 +35,7 @@ namespace AHelper.SlnMerge.Core
         public string Filepath { get; }
         public Solution Parent { get; }
         public IList<Change> Changes { get; } = new List<Change>();
+        public bool IsLegacy { get; }
 
         private IOutputWriter _outputWriter;
 
@@ -44,7 +45,8 @@ namespace AHelper.SlnMerge.Core
                         IList<Reference> projectReferences,
                         IList<string> targetFrameworks,
                         IOutputWriter outputWriter,
-                        Solution parent)
+                        Solution parent,
+                        bool isLegacy)
         {
             Filepath = filepath;
             PackageId = packageId;
@@ -53,6 +55,7 @@ namespace AHelper.SlnMerge.Core
             TargetFrameworks = targetFrameworks;
             _outputWriter = outputWriter;
             Parent = parent;
+            IsLegacy = isLegacy;
         }
 
         public static async Task<Project> CreateAsync(string filepath, Solution parent, IOutputWriter outputWriter)
@@ -63,7 +66,7 @@ namespace AHelper.SlnMerge.Core
                 throw new FileReadException(FileReadExceptionType.Csproj, filepath, parent.Filepath);
 
             using var projectCollection = new ProjectCollection();
-            var msbuildProject = new Microsoft.Build.Evaluation.Project(filepath, new Dictionary<string, string>(), null, projectCollection);
+            var msbuildProject = new Microsoft.Build.Evaluation.Project(filepath, new Dictionary<string, string>(), null, projectCollection, ProjectLoadSettings.IgnoreInvalidImports | ProjectLoadSettings.IgnoreMissingImports);
             var targetFrameworks = msbuildProject.GetProperty("TargetFrameworks") switch
             {
                 ProjectProperty pp => pp.EvaluatedValue.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(val => val.Trim()).ToArray(),
@@ -111,13 +114,14 @@ namespace AHelper.SlnMerge.Core
             }
 
             var packageId = await GetPackageId(filepath, msbuildProject);
+            var usingSdk = msbuildProject.Properties.FirstOrDefault(prop => prop.Name == "UsingMicrosoftNETSdk")?.EvaluatedValue.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?? false;
 
-            return new Project(filepath, packageId, packageReferences.Values.ToList(), projectReferences.Values.ToList(), targetFrameworks, outputWriter, parent);
+            return new Project(filepath, packageId, packageReferences.Values.ToList(), projectReferences.Values.ToList(), targetFrameworks, outputWriter, parent, !usingSdk);
         }
 
         internal static Project CreateForTesting(string filepath,
                                                  string packageId)
-            => new(filepath, packageId, Array.Empty<Reference>(), Array.Empty<Reference>(), Array.Empty<string>(), null, null);
+            => new(filepath, packageId, Array.Empty<Reference>(), Array.Empty<Reference>(), Array.Empty<string>(), null, null, false);
 
         public IList<Reference> GetUnresolvedPackageReferences(Workspace workspace)
         {
@@ -155,6 +159,22 @@ namespace AHelper.SlnMerge.Core
                                                                             Framework = framework, 
                                                                             Project = workspace.PackageLookup[reference.Include] 
                                                                         })));
+        public void AddReferences(IEnumerable<Project> projects, Workspace workspace)
+        {
+            foreach (var newReference in projects.Except(GetProjectReferences(workspace)))
+            {
+                foreach (var framework in TargetFrameworks)
+                {
+                    Changes.Add(new Change
+                    {
+                        Project = newReference,
+                        Framework = framework,
+                        ChangeType = ChangeType.Added
+                    });
+                }
+            }
+        }
+
         public void RemoveReferences(Workspace workspace)
             => ProjectReferences.Where(reference => reference.Origin == "slnmerge")
                                 .SelectMany(reference => reference.Frameworks.Select(framework => (reference, framework)))
