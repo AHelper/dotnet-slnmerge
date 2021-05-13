@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Transitive>
+  <A>
+    <AA>
+      <AA.csproj>
+      <![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AB\AB.csproj" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <PackageId>Framework.AA</PackageId>
+  </PropertyGroup>
+
+</Project>
+]]></AA.csproj>
+    </AA>
+    <AB>
+      <AB.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PackageId>Framework.AB</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
+]]></AB.csproj>
+    </AB>
+    <A.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.6.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AA", "AA\AA.csproj", "{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AB", "AB\AB.csproj", "{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Debug|x64.Build.0 = Debug|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Debug|x86.Build.0 = Debug|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Release|x64.ActiveCfg = Release|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Release|x64.Build.0 = Release|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE86B5BB-7D3E-4AB2-81F6-20236F305EEC}.Release|x86.Build.0 = Release|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Debug|x64.Build.0 = Debug|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Debug|x86.Build.0 = Debug|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Release|x64.ActiveCfg = Release|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Release|x64.Build.0 = Release|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Release|x86.ActiveCfg = Release|Any CPU
+		{EDDB78BE-5D53-4DA7-8264-293E63B97ACE}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></A.sln>
+  </A>
+  <B>
+    <BA>
+      <Properties />
+      <App.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.6.1"/>
+    </startup>
+</configuration>
+]]></App.config>
+      <BA.csproj><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3A962008-0DD1-48B9-A6DB-BD221C8682AD}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BA</RootNamespace>
+    <AssemblyName>BA</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Framework.AA" Version="1.1.0" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BB\BB.csproj">
+      <Project>{83d8043c-383d-4ac1-b220-9f00471f6882}</Project>
+      <Name>BB</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>]]></BA.csproj>
+    </BA>
+    <BB>
+      <Properties />
+      <BB.csproj><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>83d8043c-383d-4ac1-b220-9f00471f6882</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BB</RootNamespace>
+    <AssemblyName>BB</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Framework.CA" Version="1.1.0" />
+    <Reference Include="System"/>
+    
+    <Reference Include="System.Core"/>
+    <Reference Include="System.Xml.Linq"/>
+    <Reference Include="System.Data.DataSetExtensions"/>
+    
+    
+    <Reference Include="Microsoft.CSharp"/>
+    
+    <Reference Include="System.Data"/>
+    
+    <Reference Include="System.Net.Http"/>
+    
+    <Reference Include="System.Xml"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+ </Project>
+]]></BB.csproj>
+    </BB>
+    <B.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.6.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA", "BA\BA.csproj", "{3A962008-0DD1-48B9-A6DB-BD221C8682AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BB", "BB\BB.csproj", "{83D8043C-383D-4AC1-B220-9F00471F6882}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Debug|x64.Build.0 = Debug|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Release|x64.ActiveCfg = Release|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Release|x64.Build.0 = Release|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A962008-0DD1-48B9-A6DB-BD221C8682AD}.Release|x86.Build.0 = Release|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Debug|x64.Build.0 = Debug|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Debug|x86.Build.0 = Debug|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Release|x64.ActiveCfg = Release|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Release|x64.Build.0 = Release|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Release|x86.ActiveCfg = Release|Any CPU
+		{6BCE2342-D627-4351-B8F6-9EA62E74B12A}.Release|x86.Build.0 = Release|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Debug|x64.Build.0 = Debug|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Debug|x86.Build.0 = Debug|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Release|x64.ActiveCfg = Release|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Release|x64.Build.0 = Release|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Release|x86.ActiveCfg = Release|Any CPU
+		{3CD86FFF-E1E7-4906-B83C-89F60AB5F875}.Release|x86.Build.0 = Release|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Debug|x64.Build.0 = Debug|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Debug|x86.Build.0 = Debug|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Release|x64.ActiveCfg = Release|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Release|x64.Build.0 = Release|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Release|x86.ActiveCfg = Release|Any CPU
+		{83D8043C-383D-4AC1-B220-9F00471F6882}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AEC1EE8C-0C41-47D1-8569-3C5B2DEA9B36}
+	EndGlobalSection
+EndGlobal
+]]></B.sln>
+  </B>
+  <C>
+    <CA>
+      <CA.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+      <PackageId>Framework.CA</PackageId>
+    </PropertyGroup>
+  
+    <ItemGroup>
+        <PackageReference Include="Framework.AB" Version="1.1.0" />
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" />
+    </ItemGroup>
+  
+  </Project>
+]]></CA.csproj>
+    </CA>
+    <C.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.6.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CA", "CA\CA.csproj", "{3DAFC024-F020-4519-BDE6-07FC289D9C1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Debug|x64.Build.0 = Debug|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Debug|x86.Build.0 = Debug|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Release|x64.ActiveCfg = Release|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Release|x64.Build.0 = Release|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Release|x86.ActiveCfg = Release|Any CPU
+		{3DAFC024-F020-4519-BDE6-07FC289D9C1E}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></C.sln>
+  </C>
+  <nuget.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+    <clear />
+    <add key="feed" value="./feed/" />
+    <add key="nuget" value="https://api.nuget.org/v3/index.json" />
+  </packageSources>
+</configuration>
+]]></nuget.config>
+</Transitive>

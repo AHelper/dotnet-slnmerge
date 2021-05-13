@@ -47,22 +47,33 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             HandleNode(doc.Root, "Resources");
         }
 
+        public void GenerateNugets(string solution, string version)
+        {
+            Directory.CreateDirectory(Path.Join(_projectPath, "feed"));
+            RunProcess("dotnet", "pack", NormalizePaths(solution), $"/p:Version={version}");
+            foreach (var file in Directory.GetFiles(Path.Join(_projectPath, Path.GetDirectoryName(solution)), "*.nupkg", SearchOption.AllDirectories))
+            {
+                File.Copy(file, Path.Join(_projectPath, "feed", Path.GetFileName(file)));
+            }
+        }
+
         public void SetTestProject(string name)
             => _projectPath = Path.Join("Resources", name);
 
-        public Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert)
-            => MergeSolutionsRawAsync(solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(), shouldAssert);
+        public Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert, bool shouldRestore)
+            => MergeSolutionsRawAsync(solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(), shouldAssert, shouldRestore);
 
-        public Task MergeLocalSolutionsAsync(IEnumerable<string> paths, bool shouldAssert)
-            => MergeSolutionsRawAsync(paths.Select(sln => Path.Join(_projectPath, sln)).Append($"{_projectPath}/.").ToList(), shouldAssert);
+        public Task MergeLocalSolutionsAsync(IEnumerable<string> paths, bool shouldAssert, bool shouldRestore)
+            => MergeSolutionsRawAsync(paths.Select(sln => Path.Join(_projectPath, sln)).Append($"{_projectPath}/.").ToList(), shouldAssert, shouldRestore);
 
-        public async Task MergeSolutionsRawAsync(IList<string> solutions, bool shouldAssert)
+        public async Task MergeSolutionsRawAsync(IList<string> solutions, bool shouldAssert, bool shouldRestore)
         {
             try
             {
                 await new Runner(_outputWriterMock.Object).RunAsync(new RunnerOptions
                 {
-                    Solutions = solutions
+                    Solutions = solutions,
+                    NoRestore = !shouldRestore
                 });
             }
             catch (Exception ex)

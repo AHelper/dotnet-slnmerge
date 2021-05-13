@@ -67,11 +67,25 @@ namespace AHelper.SlnMerge.Core
 
             using var projectCollection = new ProjectCollection();
             var msbuildProject = new Microsoft.Build.Evaluation.Project(filepath, new Dictionary<string, string>(), null, projectCollection, ProjectLoadSettings.IgnoreInvalidImports | ProjectLoadSettings.IgnoreMissingImports);
-            var targetFrameworks = msbuildProject.GetProperty("TargetFrameworks") switch
+            var usingSdk = msbuildProject.Properties.FirstOrDefault(prop => prop.Name == "UsingMicrosoftNETSdk")?.EvaluatedValue.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?? false;
+            var targetFrameworks = Array.Empty<string>();
+
+            if (usingSdk)
             {
-                ProjectProperty pp => pp.EvaluatedValue.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(val => val.Trim()).ToArray(),
-                null => new[] { msbuildProject.GetPropertyValue("TargetFramework") }
-            };
+                targetFrameworks = msbuildProject.GetProperty("TargetFrameworks") switch
+                {
+                    ProjectProperty pp => pp.EvaluatedValue.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(val => val.Trim()).ToArray(),
+                    null => new[] { msbuildProject.GetPropertyValue("TargetFramework") }
+                };
+            }
+            else
+            {
+                targetFrameworks = new[] {
+                    msbuildProject.GetPropertyValue("TargetFrameworkVersion")
+                                  .Replace("v", "net")
+                                  .Replace(".", "")
+                };
+            }
 
             var packageReferences = new Dictionary<string, Reference>();
             var projectReferences = new Dictionary<string, Reference>();
@@ -114,7 +128,6 @@ namespace AHelper.SlnMerge.Core
             }
 
             var packageId = await GetPackageId(filepath, msbuildProject);
-            var usingSdk = msbuildProject.Properties.FirstOrDefault(prop => prop.Name == "UsingMicrosoftNETSdk")?.EvaluatedValue.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?? false;
 
             return new Project(filepath, packageId, packageReferences.Values.ToList(), projectReferences.Values.ToList(), targetFrameworks, outputWriter, parent, !usingSdk);
         }
@@ -159,15 +172,24 @@ namespace AHelper.SlnMerge.Core
                                                                             Framework = framework, 
                                                                             Project = workspace.PackageLookup[reference.Include] 
                                                                         })));
-        public void AddReferences(IEnumerable<Project> projects, Workspace workspace)
+
+        public void AddTransitiveReferences(Workspace workspace, RunnerOptions options)
         {
-            foreach (var newReference in projects.Except(GetProjectReferences(workspace)))
+            var graph = NugetGraph.Create(this, options.NoRestore, _outputWriter);
+
+            foreach (var newReference in graph.GetTransitiveReferencedProjects(workspace, _outputWriter))
             {
-                foreach (var framework in TargetFrameworks)
+                foreach (var framework in newReference.Frameworks)
                 {
+                    var projectReferences = GetProjectReferences(workspace, new[] { framework });
+                    if (projectReferences.Any(r => r.PackageId == newReference.Include))
+                    {
+                        continue;
+                    }
+
                     Changes.Add(new Change
                     {
-                        Project = newReference,
+                        Project = workspace.PackageLookup[newReference.Include],
                         Framework = framework,
                         ChangeType = ChangeType.Added
                     });
@@ -303,12 +325,14 @@ namespace AHelper.SlnMerge.Core
                                    .WhenAll();
         }
 
-        public IEnumerable<Project> GetProjectReferences(Workspace workspace)
-            => ProjectReferences.Select(reference => (reference, path: Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath))))
+        public IEnumerable<Project> GetProjectReferences(Workspace workspace, ICollection<string> frameworks = null)
+            => ProjectReferences.Where(reference => frameworks == null || reference.Frameworks.Intersect(frameworks).Any())
+                                .Select(reference => (reference, path: Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath))))
                                 .Join(workspace.PackageLookup.Values, tuple => tuple.path, proj => proj.Filepath, (tuple, proj) => (tuple.reference, proj))
                                 .Where(tuple => tuple.reference.Frameworks.Any(fw => !Changes.Any(c => c.ChangeType == ChangeType.Removed && c.Project == tuple.proj && fw == c.Framework)))
                                 .Select(tuple => tuple.proj)
                                 .Concat(Changes.Where(change => change.ChangeType == ChangeType.Added)
+                                               .Where(change => frameworks == null || frameworks.Contains(change.Framework))
                                                .Select(kvp => kvp.Project))
                                 .Distinct();
 

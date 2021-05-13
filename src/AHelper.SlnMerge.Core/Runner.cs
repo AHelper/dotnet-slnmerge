@@ -8,6 +8,8 @@ using CommandLine.Text;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Diagnostics;
+using System.Runtime.Loader;
+using System.IO;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -25,6 +27,9 @@ namespace AHelper.SlnMerge.Core
         [Option('u', "undo", HelpText = "Removes ProjectReferences that this tool has added", Default = false)]
         public bool Undo { get; set; }
 
+        [Option("no-restore", HelpText = "Disables restoring nugets while scanning. May not add projects with transitive references", Default = false)]
+        public bool NoRestore { get; set; }
+
         public IDictionary<string, string> Properties => PropertyStrings.Select(str => str.Split('=', 2))
                                                                         .Where(pair => pair.Length == 2)
                                                                         .ToDictionary(pair => pair[0], pair => pair[1]);
@@ -36,7 +41,15 @@ namespace AHelper.SlnMerge.Core
 
         static Runner()
         {
-            MSBuildLocator.RegisterDefaults();
+            var instance = MSBuildLocator.RegisterDefaults(); 
+            // Load NuGet DLLs from MSBuild directory (not handled by MSBuildLocator)
+            AssemblyLoadContext.Default.Resolving += (assemblyLoadContext, assemblyName) =>
+            {
+                var fullpath = Path.Combine(instance.MSBuildPath, $"{assemblyName.Name}.dll");
+                return File.Exists(fullpath) 
+                    ? assemblyLoadContext.LoadFromAssemblyPath(fullpath) 
+                    : null;
+            };
         }
 
         public Runner(IOutputWriter outputWriter)
@@ -69,7 +82,7 @@ namespace AHelper.SlnMerge.Core
                 {
                     await workspace.AddReferencesAsync();
                     await workspace.CheckForCircularReferences();
-                    await workspace.AddReferencesForLegacyAsync();
+                    await workspace.AddTransitiveReferences(options);
                     await workspace.PopulateSolutionsAsync();
                 }
 

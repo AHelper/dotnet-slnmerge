@@ -106,7 +106,7 @@ namespace AHelper.SlnMerge.Core
             }
         }
 
-        public async Task AddReferencesForLegacyAsync()
+        public async Task AddTransitiveReferences(RunnerOptions options)
         {
             var projects = await Solutions.Select(sln => sln.Projects.Value)
                                           .WhenAll(projs => projs.SelectMany(proj => proj)
@@ -114,23 +114,7 @@ namespace AHelper.SlnMerge.Core
 
             foreach (var project in projects)
             {
-                if (!project.IsLegacy) continue;
-
-                var open = new List<Project>(project.GetProjectReferences(this));
-                var closed = new List<Project>();
-
-                while (open.Any())
-                {
-                    var item = open.First();
-                    open.Remove(item);
-
-                    if (closed.Contains(item)) continue;
-
-                    closed.Add(item);
-                    open.AddRange(item.GetProjectReferences(this));
-                }
-
-                project.AddReferences(closed, this);
+                project.AddTransitiveReferences(this, options);
             }
         }
 

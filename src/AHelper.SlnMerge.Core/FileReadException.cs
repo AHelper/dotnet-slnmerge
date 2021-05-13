@@ -23,6 +23,7 @@ namespace AHelper.SlnMerge.Core
                 FileReadExceptionType.Csproj => "Project could not be found",
                 FileReadExceptionType.Nuspec => "Nuspec file could not be found",
                 FileReadExceptionType.Sln => "Solution could not be found",
+                FileReadExceptionType.ProjectAssetsJson => "project.assets.json could not be found. Please manually restore the project and try again.",
                 _ => "File could not be read"
             };
 

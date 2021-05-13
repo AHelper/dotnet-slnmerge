@@ -5,6 +5,7 @@ namespace AHelper.SlnMerge.Core
         ProjectReference,
         Csproj,
         Nuspec,
-        Sln
+        Sln,
+        ProjectAssetsJson
     }
 }

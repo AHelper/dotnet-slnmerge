@@ -46,3 +46,10 @@ Feature: Advanced merging
         Then solution A/A.sln should include ../B/BA/BA.csproj, ../B/BB/BB.csproj, ../C/C/C.csproj
         And it should print warning FileReadException for 'C/C/C.csproj'
 
+    Scenario: Transitive
+        Given test project created with "AdvancedMerging/Transitive.xml"
+        And nugets created for solution "A/A.sln" with version "1.1.0"
+        And nugets created for solution "C/C.sln" with version "1.1.0"
+        When merging solutions with restoring: A, B
+        Then project B/BA/BA.csproj should reference ../../A/AB/AB.csproj
+

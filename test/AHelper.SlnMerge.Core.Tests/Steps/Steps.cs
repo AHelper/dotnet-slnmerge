@@ -22,25 +22,33 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         public void GivenTestGeneratorScriptName(string filename)
             => _driver.GenerateProjects(filename);
 
+        [Given(@"nugets created for solution ""(.*)"" with version ""(.*)""")]
+        public void GivenNugetsGenerated(string solution, string version)
+            => _driver.GenerateNugets(solution, version);
+
         [Given(@"a test project ""(.*)""")]
         public void GivenTestProject(string name)
             => _driver.SetTestProject(name);
 
+        [When(@"merging solutions with restoring: (.*)")]
+        public Task WhenMergeSolutionsWithRestoreAsync(string names)
+            => _driver.MergeSolutionsAsync(Split(names), true, true);
+
         [When(@"merging solutions: (.*)")]
         public Task WhenMergeSolutionsAsync(string names)
-            => _driver.MergeSolutionsAsync(Split(names), true);
+            => _driver.MergeSolutionsAsync(Split(names), true, false);
 
         [When(@"merging the local solution with: (.*)")]
         public Task WhenMergeLocalSolutionAsync(string paths)
-            => _driver.MergeLocalSolutionsAsync(Split(paths), true);
+            => _driver.MergeLocalSolutionsAsync(Split(paths), true, false);
 
         [When(@"merging the local solution with exceptions: (.*)")]
         public Task WhenMergeLocalSolutionWithExceptionsAsync(string paths)
-            => _driver.MergeLocalSolutionsAsync(Split(paths), false);
+            => _driver.MergeLocalSolutionsAsync(Split(paths), false, false);
 
         [When(@"merging solutions with exceptions: (.*)")]
         public Task WhenMergeSolutionsWithExceptionsAsync(string names)
-            => _driver.MergeSolutionsAsync(Split(names), false);
+            => _driver.MergeSolutionsAsync(Split(names), false, false);
 
         [When(@"undoing merges in solutions: (.*)")]
         public Task WhenUndoingMergesInSolutions(string paths)
