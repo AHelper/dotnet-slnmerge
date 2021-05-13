@@ -106,6 +106,13 @@ namespace AHelper.SlnMerge.Core
             }
         }
 
+        public void RestoreNugets(RunnerOptions options)
+        {
+            if (options.NoRestore) return;
+
+            Solutions.ForEach(sln => sln.RestoreNugets());
+        }
+
         public async Task AddTransitiveReferences(RunnerOptions options)
         {
             var projects = await Solutions.Select(sln => sln.Projects.Value)

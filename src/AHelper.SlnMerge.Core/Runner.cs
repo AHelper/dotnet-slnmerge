@@ -82,6 +82,7 @@ namespace AHelper.SlnMerge.Core
                 {
                     await workspace.AddReferencesAsync();
                     await workspace.CheckForCircularReferences();
+                    workspace.RestoreNugets(options);
                     await workspace.AddTransitiveReferences(options);
                     await workspace.PopulateSolutionsAsync();
                 }

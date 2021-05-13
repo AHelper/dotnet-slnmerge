@@ -1,5 +1,8 @@
 using Microsoft.Build.Construction;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
 using Microsoft.VisualBasic;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +16,7 @@ namespace AHelper.SlnMerge.Core
         public AsyncLazy<List<Project>> Projects { get; private set; }
         public IDictionary<Project, ChangeType> Changes { get; } = new ConcurrentDictionary<Project, ChangeType>();
         public string Filepath { get; }
+        private static object _buildLock = new();
 
         private readonly IOutputWriter _outputWriter;
 
@@ -38,6 +42,26 @@ namespace AHelper.SlnMerge.Core
             Filepath = Path.GetFullPath(filepath);
             Projects = new AsyncLazy<List<Project>>(GetProjectsAsync);
             _outputWriter = outputWriter;
+        }
+
+        public void RestoreNugets()
+        {
+            lock (_buildLock)
+            {
+                _outputWriter.PrintProgress($"Restoring nugets for {Filepath}...");
+                using var projectCollection = new ProjectCollection();
+                var result = BuildManager.DefaultBuildManager.Build(new BuildParameters(projectCollection),
+                                                                    new BuildRequestData(Filepath, new Dictionary<string, string>(), null, new[] { "Restore" }, null));
+
+                if (result.Exception != null)
+                {
+                    _outputWriter.PrintWarning(result.Exception);
+                }
+                else if (result.ResultsByTarget["Restore"].Exception != null)
+                {
+                    _outputWriter.PrintWarning(result.ResultsByTarget["Restore"].Exception);
+                }
+            }
         }
 
         public async Task CheckDetachedProjectReferences()

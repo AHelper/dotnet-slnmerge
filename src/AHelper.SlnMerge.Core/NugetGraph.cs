@@ -22,51 +22,30 @@ namespace AHelper.SlnMerge.Core
 
         public static NugetGraph Create(Project project, bool noRestore, IOutputWriter outputWriter)
         {
-
-            if (!noRestore)
+            using var projectCollection = new ProjectCollection();
+            var msbuildProject = new Microsoft.Build.Evaluation.Project(project.Filepath, new Dictionary<string, string>(), null, projectCollection, ProjectLoadSettings.IgnoreInvalidImports | ProjectLoadSettings.IgnoreMissingImports);
+            
+            if (string.IsNullOrEmpty(msbuildProject.GetPropertyValue("ProjectAssetsFile")))
             {
-                try
+                if (!noRestore)
                 {
-                    lock (BuildLock)
-                    {
-                        using var projectCollection = new ProjectCollection();
-                        var msbuildProject = new Microsoft.Build.Evaluation.Project(project.Filepath, new Dictionary<string, string>(), null, projectCollection, ProjectLoadSettings.IgnoreInvalidImports | ProjectLoadSettings.IgnoreMissingImports);
-                        var result = msbuildProject.Build("Restore");
-                        if (!result) throw new Exception($"Failed to restore project '{project.Filepath}'");
-                    }
+                    outputWriter.PrintWarning(new Exception($"{project.Filepath} has no ProjectAssetsFile set, ignoring nugets"));
                 }
-                catch (Exception ex)
-                {
-                    outputWriter.PrintWarning(ex);
-                }
+                return new NugetGraph(null);
             }
 
-            using (var projectCollection = new ProjectCollection())
+            try
             {
-                var msbuildProject = new Microsoft.Build.Evaluation.Project(project.Filepath, new Dictionary<string, string>(), null, projectCollection, ProjectLoadSettings.IgnoreInvalidImports | ProjectLoadSettings.IgnoreMissingImports);
-                outputWriter.PrintProgress(msbuildProject.GetPropertyValue("ProjectAssetsFile"));
-                if (string.IsNullOrEmpty(msbuildProject.GetPropertyValue("ProjectAssetsFile")))
+                var file = JsonSerializer.Deserialize<ProjectAssetsFile>(File.ReadAllText(msbuildProject.GetPropertyValue("ProjectAssetsFile")), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                return new NugetGraph(file);
+            }
+            catch (IOException)
+            {
+                if (noRestore)
                 {
-                    if (!noRestore)
-                    {
-                        outputWriter.PrintWarning(new Exception($"{project.Filepath} has no ProjectAssetsFile set, ignoring nugets"));
-                    }
                     return new NugetGraph(null);
                 }
-
-                try
-                {
-                    var file = JsonSerializer.Deserialize<ProjectAssetsFile>(File.ReadAllText(msbuildProject.GetPropertyValue("ProjectAssetsFile")), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                    return new NugetGraph(file);
-                }
-                catch (IOException)
-                {
-                    if (noRestore)
-                    {
-                        return new NugetGraph(null);
-                    }
-                    throw new FileReadException(FileReadExceptionType.ProjectAssetsJson, msbuildProject.GetPropertyValue("ProjectAssetsFile"), project.Filepath);
-                }
+                throw new FileReadException(FileReadExceptionType.ProjectAssetsJson, msbuildProject.GetPropertyValue("ProjectAssetsFile"), project.Filepath);
             }
         }
 
