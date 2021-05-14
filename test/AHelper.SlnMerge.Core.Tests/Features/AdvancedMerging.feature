@@ -51,5 +51,7 @@ Feature: Advanced merging
         And nugets created for solution "A/A.sln" with version "1.1.0"
         And nugets created for solution "C/C.sln" with version "1.1.0"
         When merging solutions with restoring: A, B
-        Then project B/BA/BA.csproj should reference ../../A/AB/AB.csproj
+        Then project B/BA/BA.csproj should reference ../../A/AA/AA.csproj,../../A/AB/AB.csproj
+        And project B/BB/BB.csproj should reference ../../A/AB/AB.csproj
+        And solution B/B.sln should include ../A/AA/AA.csproj, ../A/AB/AB.csproj
 
