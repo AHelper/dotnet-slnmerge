@@ -110,7 +110,7 @@ namespace AHelper.SlnMerge.Core
         {
             if (options.NoRestore) return;
 
-            Solutions.ForEach(sln => sln.RestoreNugets());
+            Solutions.ForEach(sln => sln.RestoreNugets(options));
         }
 
         public async Task AddTransitiveReferences(RunnerOptions options)

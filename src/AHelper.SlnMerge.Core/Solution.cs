@@ -5,6 +5,7 @@ using Microsoft.VisualBasic;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,14 +45,32 @@ namespace AHelper.SlnMerge.Core
             _outputWriter = outputWriter;
         }
 
-        public void RestoreNugets()
+        public void RestoreNugets(RunnerOptions options)
         {
             lock (_buildLock)
             {
                 _outputWriter.PrintProgress($"Restoring nugets for {Filepath}...");
-                using var projectCollection = new ProjectCollection();
-                var result = BuildManager.DefaultBuildManager.Build(new BuildParameters(projectCollection),
-                                                                    new BuildRequestData(Filepath, new Dictionary<string, string>(), null, new[] { "Restore" }, null));
+                var properties = new Dictionary<string, string>
+                {
+                    ["Configuration"] = "Debug",
+                    ["Platform"] = "Any CPU"
+                };
+                var parameters = new BuildParameters
+                {
+                    ProjectLoadSettings = ProjectLoadSettings.IgnoreInvalidImports | ProjectLoadSettings.IgnoreMissingImports
+                };
+
+                if (options.Verbosity >= TraceLevel.Verbose)
+                {
+                    var logger = new Microsoft.Build.Logging.BinaryLogger()
+                    {
+                        Parameters = $"{Filepath}.binlog"
+                    };
+                    parameters.Loggers = new[] { logger };
+                }
+
+                var result = BuildManager.DefaultBuildManager.Build(parameters,
+                                                                    new BuildRequestData(Filepath, properties, null, new[] { "Restore" }, null));
 
                 if (result.Exception != null)
                 {
@@ -60,6 +79,10 @@ namespace AHelper.SlnMerge.Core
                 else if (result.ResultsByTarget["Restore"].Exception != null)
                 {
                     _outputWriter.PrintWarning(result.ResultsByTarget["Restore"].Exception);
+                }
+                if (result.OverallResult == BuildResultCode.Failure)
+                {
+                    _outputWriter.PrintWarning(new Exception($"Restoring packages for {Filepath} failed"));
                 }
             }
         }
