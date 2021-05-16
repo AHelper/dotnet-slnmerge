@@ -10,6 +10,7 @@ using System.Runtime.ExceptionServices;
 using System.Diagnostics;
 using System.Runtime.Loader;
 using System.IO;
+using Spectre.Console;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -68,31 +69,35 @@ namespace AHelper.SlnMerge.Core
         {
             try
             {
-                _outputWriter.LogLevel = options.Verbosity;
+                await _outputWriter.StartProgressContext(options, async ctx =>
+                    {
+                        _outputWriter.LogLevel = options.Verbosity;
 
-                var workspace = await Workspace.CreateAsync(_outputWriter, options.Solutions);
-                await LogWorkspaceSolutionsAsync(workspace);
+                        var workspace = await ctx.WithTaskAsync("Loading projects/solutions", task => Workspace.CreateAsync(_outputWriter, options.Solutions, task));
+                        await LogWorkspaceSolutionsAsync(workspace);
 
-                if (options.Undo)
-                {
-                    await workspace.RemoveReferencesAsync();
-                    await workspace.CleanupSolutionsAsync();
-                }
-                else
-                {
-                    await workspace.AddReferencesAsync();
-                    await workspace.CheckForCircularReferences();
-                    workspace.RestoreNugets(options);
-                    await workspace.AddTransitiveReferences(options);
-                    await workspace.PopulateSolutionsAsync();
-                }
+                        if (options.Undo)
+                        {
+                            await ctx.WithTaskAsync("Removing ProjectReferences", task => workspace.RemoveReferencesAsync(task));
+                            await ctx.WithTaskAsync("Removing projects from solution", task => workspace.CleanupSolutionsAsync(task));
+                        }
+                        else
+                        {
+                            await ctx.WithTaskAsync("Adding ProjectReferences for direct references", task => workspace.AddReferencesAsync(task));
+                            await ctx.WithTaskAsync("Checking for circular references", task => workspace.CheckForCircularReferences(task));
+                            ctx.WithTask("Running NuGet restore", task => workspace.RestoreNugets(options, task));
+                            await ctx.WithTaskAsync("Adding ProjectReferences for transitive references", task => workspace.AddTransitiveReferences(options, task));
+                            await ctx.WithTaskAsync("Populating solutions", task => workspace.PopulateSolutionsAsync(task));
+                        }
 
-                await workspace.CommitChangesAsync(false);
-                _outputWriter.PrintComplete(await workspace.Solutions
-                                                           .Select(sln => sln.Projects.Value)
-                                                           .WhenAll(projects => projects.SelectMany(projs => projs)
-                                                                                        .Where(proj => proj.Changes.Any())
-                                                                                        .Count()));
+                        await ctx.WithTaskAsync("Writing changes", task => workspace.CommitChangesAsync(false, task));
+                        _outputWriter.PrintComplete(await workspace.Solutions
+                                                                   .Select(sln => sln.Projects.Value)
+                                                                   .WhenAll(projects => projects.SelectMany(projs => projs)
+                                                                                                .Where(proj => proj.Changes.Any())
+                                                                                                .Count()));
+
+                    });
             }
             catch (Exception ex)
             {

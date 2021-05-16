@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Spectre.Console;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -35,39 +36,43 @@ namespace AHelper.SlnMerge.Core
             }
         }
 
-        public static async Task<Workspace> CreateAsync(IOutputWriter outputWriter, IEnumerable<string> solutionPaths)
+        public static async Task<Workspace> CreateAsync(IOutputWriter outputWriter, IEnumerable<string> solutionPaths, IProgressTask createWorkspaceTask)
         {
             var solutions = solutionPaths.Select(path => new Solution(outputWriter, path))
                                          .ToList();
-            await Task.WhenAll(solutions.Select(sln => sln.Projects.Value));
-            await DeduplicateProjects(solutions);
-            await Task.WhenAll(solutions.Select(sln => sln.CheckDetachedProjectReferences()));
+            await createWorkspaceTask.IncrementWhenAll(solutions.Select(sln => sln.Projects.Value), 33);
+            await DeduplicateProjects(solutions, createWorkspaceTask);
+            await createWorkspaceTask.IncrementWhenAll(solutions.Select(sln => sln.CheckDetachedProjectReferences()), 34);
+            createWorkspaceTask.StopTask();
+
             return new Workspace(outputWriter, solutions);
         }
 
-        public static async Task DeduplicateProjects(List<Solution> solutions)
+        public static async Task DeduplicateProjects(List<Solution> solutions, IProgressTask createWorkspaceTask)
         {
             var projects = await solutions.Select(sln => sln.Projects.Value)
                                           .WhenAll(projs => projs.SelectMany(projs => projs)
-                                                                 .DistinctBy(proj => proj.Filepath));
+                                                                 .DistinctBy(proj => proj.Filepath)
+                                                                 .ToList());
             
             foreach(var sln in solutions)
             {
                 await sln.ReplaceProjects(projects);
+                createWorkspaceTask.Increment(33.0 / solutions.Count);
             }
         }
 
-        public async Task AddReferencesAsync()
+        public async Task AddReferencesAsync(IProgressTask task)
             => await Solutions.Select(sln => sln.Projects.Value)
                               .WhenAll(projs => projs.SelectMany(projs => projs)
-                                                     .ForEach(proj => proj.AddReferences(this)));
+                                                     .IncrementForEach(task, 100, proj => proj.AddReferences(this)));
 
-        public async Task RemoveReferencesAsync()
+        public async Task RemoveReferencesAsync(IProgressTask task)
             => await Solutions.Select(sln => sln.Projects.Value)
                               .WhenAll(projs => projs.SelectMany(projs => projs)
-                                                     .ForEach(proj => proj.RemoveReferences(this)));
+                                                     .IncrementForEach(task, 100, proj => proj.RemoveReferences(this)));
 
-        public async Task CheckForCircularReferences()
+        public async Task CheckForCircularReferences(IProgressTask task)
         {
             var projects = await Solutions.Select(sln => sln.Projects.Value)
                                           .WhenAll(projs => projs.SelectMany(projs => projs)
@@ -75,7 +80,7 @@ namespace AHelper.SlnMerge.Core
                                           .ToDictionaryAsync(proj => proj.PackageId,
                                                              proj => proj);
 
-            foreach (var project in projects.Values)
+            projects.Values.IncrementForEach(task, 100, project =>
             {
                 var rootNode = new ReferenceNode(project, null);
                 var open = new List<ReferenceNode>(project.GetProjectReferences(this).Select(proj => new ReferenceNode(proj, rootNode)).Distinct());
@@ -103,31 +108,34 @@ namespace AHelper.SlnMerge.Core
                         }
                     }
                 }
-            }
+            });
         }
 
-        public void RestoreNugets(RunnerOptions options)
+        public void RestoreNugets(RunnerOptions options, IProgressTask task)
         {
-            if (options.NoRestore) return;
+            if (options.NoRestore)
+            {
+                task.Increment(100);
+                return;
+            }
 
-            Solutions.ForEach(sln => sln.RestoreNugets(options));
+            Solutions.IncrementForEach(task, 100, sln => sln.RestoreNugets(options));
         }
 
-        public async Task AddTransitiveReferences(RunnerOptions options)
+        public async Task AddTransitiveReferences(RunnerOptions options, IProgressTask task)
         {
             var projects = await Solutions.Select(sln => sln.Projects.Value)
                                           .WhenAll(projs => projs.SelectMany(proj => proj)
                                                                  .Distinct());
 
-            foreach (var project in projects)
+            projects.IncrementForEach(task, 100, project =>
             {
                 project.AddTransitiveReferences(this, options);
-            }
+            });
         }
 
-        public async Task PopulateSolutionsAsync()
-        {
-            foreach (var sln in Solutions)
+        public Task PopulateSolutionsAsync(IProgressTask task)
+            => Solutions.IncrementForEach(task, 100, async sln =>
             {
                 var projects = await sln.Projects;
                 var closed = new List<Project>();
@@ -150,16 +158,15 @@ namespace AHelper.SlnMerge.Core
                     proj.GetProjectReferences(this)
                         .ForEach(open.Push);
                 }
-            }
-        }
+            });
 
-        public Task CleanupSolutionsAsync()
+        public Task CleanupSolutionsAsync(IProgressTask task)
             => Solutions.Select(sln => sln.PruneProjectsAsync(this))
-                        .WhenAll();
+                        .IncrementWhenAll(task, 100);
 
-        public async Task CommitChangesAsync(bool isDryRun)
+        public async Task CommitChangesAsync(bool isDryRun, IProgressTask task)
         {
-            foreach (var sln in Solutions)
+            Solutions.IncrementForEach(task, 50, sln =>
             {
                 sln.Changes.GroupBy(kvp => kvp.Value)
                            .ForEach(changes =>
@@ -170,16 +177,13 @@ namespace AHelper.SlnMerge.Core
                                    changes.Key == ChangeType.Added ? "add" : "remove"
                                }.Concat(changes.Select(change => change.Key.Filepath))
                                 .ToArray()));
-            }
+            });
 
             var projects = await Solutions.Select(sln => sln.Projects.Value)
                                           .WhenAll(projs => projs.SelectMany(projs => projs)
                                           .Distinct());
 
-            foreach(var proj in projects)
-            {
-                proj.WriteChanges();
-            }
+            projects.IncrementForEach(task, 50, proj => proj.WriteChanges());
         }
 
         record ReferenceNode(Project Project, ReferenceNode Parent);

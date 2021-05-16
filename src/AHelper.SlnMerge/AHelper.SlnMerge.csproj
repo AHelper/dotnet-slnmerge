@@ -25,6 +25,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.39.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AHelper.SlnMerge.Core\AHelper.SlnMerge.Core.csproj" />
   </ItemGroup>
 

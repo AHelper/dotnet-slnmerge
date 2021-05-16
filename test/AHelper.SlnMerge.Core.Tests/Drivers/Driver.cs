@@ -31,6 +31,8 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
                              .Callback((Exception ex) => OutputHelper?.WriteLine(ex.ToString()));
             _outputWriterMock.Setup(x => x.PrintWarning(It.IsAny<Exception>()))
                              .Callback((Exception ex) => OutputHelper?.WriteLine(ex.ToString()));
+            _outputWriterMock.Setup(x => x.StartProgressContext(It.IsAny<RunnerOptions>(), It.IsAny<Func<IProgressContext, Task>>()))
+                             .Returns((RunnerOptions _, Func<IProgressContext, Task> callback) => callback(new NullProgressContext()));
         }
 
         public void GenerateProjects(string filename)

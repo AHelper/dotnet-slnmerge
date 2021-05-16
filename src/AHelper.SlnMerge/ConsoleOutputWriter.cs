@@ -1,6 +1,6 @@
-using System.IO;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace AHelper.SlnMerge.Core
 {
@@ -49,6 +49,9 @@ namespace AHelper.SlnMerge.Core
         {
             Print(TraceLevel.Warning, exception.ToString());
         }
+
+        public Task StartProgressContext(RunnerOptions options, Func<IProgressContext, Task> predicate)
+            => predicate(new NullProgressContext());
 
         private void Print(TraceLevel level, string message)
         {

@@ -6,6 +6,6 @@ namespace AHelper.SlnMerge
     internal class Program
     {
         static Task Main(string[] args)
-            => new Runner(new ConsoleOutputWriter()).RunAsync(args);
+            => new Runner(new SpectreConsoleOutputWriter()).RunAsync(args);
     }
 }
