@@ -60,7 +60,11 @@ namespace AHelper.SlnMerge.Core
 
         public Task RunAsync(string[] args)
         {
-            var parser = new Parser(opts => opts.HelpWriter = null).ParseArguments<RunnerOptions>(args);
+            var parser = new Parser(opts =>
+            {
+                opts.HelpWriter = null;
+                opts.CaseInsensitiveEnumValues = true;
+            }).ParseArguments<RunnerOptions>(args);
             return parser.WithNotParsed(errors => HandleParseError(parser, errors))
                          .WithParsedAsync(RunAsync);
         }
