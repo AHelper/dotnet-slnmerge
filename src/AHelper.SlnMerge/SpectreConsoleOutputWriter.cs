@@ -41,6 +41,11 @@ namespace AHelper.SlnMerge.Core
             Print(TraceLevel.Verbose, file);
         }
 
+        public void PrintInfo(string message)
+        {
+            Print(TraceLevel.Info, message);
+        }
+
         public void PrintTrace(string format, params object[] args)
         {
             Print(TraceLevel.Verbose, string.Format(format, args));

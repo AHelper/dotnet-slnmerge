@@ -35,6 +35,11 @@ namespace AHelper.SlnMerge.Core
             Print(TraceLevel.Error, exception.ToString());
         }
 
+        public void PrintInfo(string message)
+        {
+            Print(TraceLevel.Info, message);
+        }
+
         public void PrintProgress(string file)
         {
             Print(TraceLevel.Verbose, file);

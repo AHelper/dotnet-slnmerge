@@ -14,6 +14,7 @@ namespace AHelper.SlnMerge.Core
         void PrintProgress(string file);
         void PrintCommand(string command);
         void PrintWarning(Exception exception);
+        void PrintInfo(string message);
         void PrintTrace(string format, params object[] args);
         Task StartProgressContext(RunnerOptions options, Func<IProgressContext, Task> predicate);
     }
