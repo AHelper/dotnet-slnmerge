@@ -164,6 +164,9 @@ namespace AHelper.SlnMerge.Core
             => _task.Increment(value);
 
         public void StopTask()
-            => _task.StopTask();
+        {
+            _task.Value = _task.MaxValue;
+            _task.StopTask();
+        }
     }
 }
