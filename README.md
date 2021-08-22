@@ -1,4 +1,6 @@
 # dotnet-slnmerge
+[![Nuget](https://img.shields.io/nuget/v/dotnet-slnmerge)](https://www.nuget.org/packages/dotnet-slnmerge/) [![Build](https://img.shields.io/gitlab/pipeline/dotnet-slnmerge/dotnet-slnmerge/master)](https://gitlab.com/dotnet-slnmerge/dotnet-slnmerge/-/pipelines?scope=branches&page=1)
+
 A .NET CLI tool to automatically merge projects in multiple solutions, adding `<ProjectReference>`s when a corresponding `<PackageReference>` is found.
 
 ## Usage
@@ -8,11 +10,11 @@ dotnet tool install --global dotnet-slnmerge
 ```
 Merge projects from one or more solutions into another:
 ```
-slnmerge dest.sln source.sln
+slnmerge src/ ../other/solution.sln
 ```
 Undo the merge operation with:
 ```
-slnmerge -u dest.sln source.sln
+slnmerge -u src/ ../other/solution.sln
 ```
 
 ## Why?

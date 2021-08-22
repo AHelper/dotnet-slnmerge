@@ -22,6 +22,7 @@
     <PackageProjectUrl>https://gitlab.com/dotnet-slnmerge/dotnet-slnmerge</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +33,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AHelper.SlnMerge.Core\AHelper.SlnMerge.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <None Include="../../README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
