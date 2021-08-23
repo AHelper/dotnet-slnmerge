@@ -164,7 +164,7 @@ namespace AHelper.SlnMerge.Core
             => Solutions.Select(sln => sln.PruneProjectsAsync(this))
                         .IncrementWhenAll(task, 100);
 
-        public async Task CommitChangesAsync(bool isDryRun, IProgressTask task)
+        public async Task CommitChangesAsync(bool isDryRun, RunnerOptions options, IProgressTask task)
         {
             Solutions.IncrementForEach(task, 50, sln =>
             {
@@ -174,7 +174,9 @@ namespace AHelper.SlnMerge.Core
                                {
                                    "sln",
                                    sln.Filepath,
-                                   changes.Key == ChangeType.Added ? "add" : "remove"
+                                   changes.Key == ChangeType.Added ? "add" : "remove",
+                                   "--solution-folder",
+                                   options.SolutionFolderName
                                }.Concat(changes.Select(change => change.Key.Filepath))
                                 .ToArray()));
             });

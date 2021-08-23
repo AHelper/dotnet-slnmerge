@@ -1,5 +1,15 @@
 Feature: Solution handling
 
+    Scenario: Custom Solution folders
+        Given test project created with "Solutions/CustomSolutionFolders.xml"
+        When merging solutions in solution folder 'test': A, B
+        Then solution A/A.sln should have project paths A, test/B
+
+    Scenario: Custom Solution folders (default)
+        Given test project created with "Solutions/CustomSolutionFolders.xml"
+        When merging solutions: A, B
+        Then solution A/A.sln should have project paths A, slnmerge/B
+
     Scenario: DifferentSlnName
         Given test project created with "Solutions/DifferentSlnName.xml"
         When merging solutions: A, B

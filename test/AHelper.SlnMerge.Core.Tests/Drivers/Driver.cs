@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using MSBuildProject = Microsoft.Build.Evaluation.Project;
+using SolutionFile = Microsoft.Build.Construction.SolutionFile;
 
 namespace AHelper.SlnMerge.Core.Tests.Drivers
 {
@@ -62,20 +63,21 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         public void SetTestProject(string name)
             => _projectPath = Path.Join("Resources", name);
 
-        public Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert, bool shouldRestore)
-            => MergeSolutionsRawAsync(solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(), shouldAssert, shouldRestore);
+        public Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert, bool shouldRestore, string solutionFolder = null)
+            => MergeSolutionsRawAsync(solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(), shouldAssert, shouldRestore, solutionFolder);
 
         public Task MergeLocalSolutionsAsync(IEnumerable<string> paths, bool shouldAssert, bool shouldRestore)
             => MergeSolutionsRawAsync(paths.Select(sln => Path.Join(_projectPath, sln)).Append($"{_projectPath}/.").ToList(), shouldAssert, shouldRestore);
 
-        public async Task MergeSolutionsRawAsync(IList<string> solutions, bool shouldAssert, bool shouldRestore)
+        public async Task MergeSolutionsRawAsync(IList<string> solutions, bool shouldAssert, bool shouldRestore, string solutionFolder = null)
         {
             try
             {
                 await new Runner(_outputWriterMock.Object).RunAsync(new RunnerOptions
                 {
                     Solutions = solutions,
-                    NoRestore = !shouldRestore
+                    NoRestore = !shouldRestore,
+                    SolutionFolderName = solutionFolder ?? "slnmerge"
                 });
             }
             catch (Exception ex)
@@ -169,6 +171,19 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         {
             var actualProjects = RunProcess("dotnet", "sln", solution, "list").Skip(2).Select(NormalizePaths).ToList();
             Assert.All(projects, project => Assert.Contains(project, actualProjects));
+        }
+
+        public void CheckSolutionHasProjectPaths(string solution, IEnumerable<string> projectPaths)
+        {
+            var solutionItems = SolutionFile.Parse(Path.Combine(Directory.GetCurrentDirectory(), _projectPath, solution)).ProjectsInOrder;
+            var itemPaths = solutionItems.Where(proj => proj.ProjectType == Microsoft.Build.Construction.SolutionProjectType.KnownToBeMSBuildFormat)
+                                         .Select(proj => proj.Expand(p => solutionItems.FirstOrDefault(item => item.ProjectGuid == p.ParentProjectGuid))
+                                                             .Select(p => p.ProjectName)
+                                                             .Reverse())
+                                         .Select(names => string.Join("/", names))
+                                         .ToList();
+
+            Assert.All(projectPaths, projectPath => Assert.Contains(itemPaths, itemPath => itemPath == projectPath));
         }
 
         public void CheckProjectsNotInSolution(string solution, IEnumerable<string> projects)

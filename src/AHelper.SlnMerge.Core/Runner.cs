@@ -22,6 +22,9 @@ namespace AHelper.SlnMerge.Core
         [Option('p', "property", HelpText = "MSBuild property (key=value) when loading projects")]
         public IEnumerable<string> PropertyStrings { get; set; }
 
+        [Option('f', "folder", HelpText = "Name of solution folder to place merged projects", Default = "slnmerge")]
+        public string SolutionFolderName { get; set; } = "slnmerge";
+
         [Option('v', "verbosity", HelpText = "Set verbosity (verbose|info|warning|error|off)", Default = TraceLevel.Info)]
         public TraceLevel Verbosity { get; set; }
 
@@ -94,7 +97,7 @@ namespace AHelper.SlnMerge.Core
                             await ctx.WithTaskAsync("Populating solutions", task => workspace.PopulateSolutionsAsync(task));
                         }
 
-                        await ctx.WithTaskAsync("Writing changes", task => workspace.CommitChangesAsync(false, task));
+                        await ctx.WithTaskAsync("Writing changes", task => workspace.CommitChangesAsync(false, options, task));
                         _outputWriter.PrintComplete(await workspace.Solutions
                                                                    .Select(sln => sln.Projects.Value)
                                                                    .WhenAll(projects => projects.SelectMany(projs => projs)

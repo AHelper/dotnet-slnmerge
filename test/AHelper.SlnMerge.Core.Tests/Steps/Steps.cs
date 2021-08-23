@@ -38,6 +38,10 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         public Task WhenMergeSolutionsAsync(string names)
             => _driver.MergeSolutionsAsync(Split(names), true, false);
 
+        [When(@"merging solutions in solution folder '(.*)': (.*)")]
+        public Task WhenMergeSolutionsAsync(string solutionFolder, string names)
+            => _driver.MergeSolutionsAsync(Split(names), true, false, solutionFolder);
+
         [When(@"merging the local solution with: (.*)")]
         public Task WhenMergeLocalSolutionAsync(string paths)
             => _driver.MergeLocalSolutionsAsync(Split(paths), true, false);
@@ -77,6 +81,10 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         [Then(@"solution (.*) should not include (.*)")]
         public void ThenCheckNotInSolution(string solution, string projects)
             => _driver.CheckProjectsNotInSolution(solution, Split(projects));
+
+        [Then(@"solution (.*) should have project paths (.*)")]
+        public void ThenCheckSolutionHasProjectPaths(string solution, string projects)
+            => _driver.CheckSolutionHasProjectPaths(solution, Split(projects));
 
         [Then("it should not throw any exceptions")]
         public void ThenCheckNoExceptions()
