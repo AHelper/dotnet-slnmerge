@@ -35,7 +35,8 @@ namespace AHelper.SlnMerge
                         metadata.LastUpdateCheckTime = DateTime.UtcNow;
                         await File.WriteAllTextAsync(MetadataPath, JsonSerializer.Serialize(metadata));
 
-                        var response = await "https://gitlab.com/api/v4/projects/24002513/releases".GetJsonListAsync();
+                        var response = await "https://gitlab.com/api/v4/projects/24002513/releases".WithTimeout(TimeSpan.FromSeconds(5))
+                                                                                                   .GetJsonListAsync();
                         var latestVersion = response.Select(release => release.name)
                                                     .Cast<string>()
                                                     .Select(name => name.TrimStart('v', 'V'))
