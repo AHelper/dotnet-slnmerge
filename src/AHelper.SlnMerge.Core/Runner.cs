@@ -86,6 +86,7 @@ namespace AHelper.SlnMerge.Core
                         if (options.Undo)
                         {
                             await ctx.WithTaskAsync("Removing ProjectReferences", task => workspace.RemoveReferencesAsync(task));
+                            await ctx.WithTaskAsync("Removing Version overrides", task => workspace.RemoveVersionsAsync(task));
                             await ctx.WithTaskAsync("Removing projects from solution", task => workspace.CleanupSolutionsAsync(task));
                         }
                         else
@@ -94,6 +95,7 @@ namespace AHelper.SlnMerge.Core
                             await ctx.WithTaskAsync("Checking for circular references", task => workspace.CheckForCircularReferences(task));
                             ctx.WithTask("Running NuGet restore", task => workspace.RestoreNugets(options, task));
                             await ctx.WithTaskAsync("Adding ProjectReferences for transitive references", task => workspace.AddTransitiveReferences(options, task));
+                            await ctx.WithTaskAsync("Adding Version overrides", task => workspace.AddVersionsAsync(task));
                             await ctx.WithTaskAsync("Populating solutions", task => workspace.PopulateSolutionsAsync(task));
                         }
 

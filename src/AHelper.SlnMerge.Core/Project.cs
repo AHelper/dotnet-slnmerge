@@ -209,16 +209,19 @@ namespace AHelper.SlnMerge.Core
 
         public void WriteChanges()
         {
-            var project = ProjectRootElement.Open(Filepath, new ProjectCollection(), true);
-            var changes = Changes.GroupBy(change => change.Project)
+            using var projectCollection = new ProjectCollection();
+            var project = ProjectRootElement.Open(Filepath, projectCollection, true);
+            var changes = Changes.Where(change => change.ChangeType == ChangeType.Added || change.ChangeType == ChangeType.Removed)
+                                 .GroupBy(change => change.Project)
                                  .Select(change => TargetFrameworks.All(tf => change.Any(c => c.Framework == tf))
                                      ? (change.Key, frameworks: new[] { "" }) 
                                      : (change.Key, frameworks: change.Select(c => c.Framework)))
                                  .SelectMany(tuple => tuple.frameworks.Select(framework => (tuple.Key, framework)));
-            var changeTypeDict = Changes.DistinctBy(change => change.Project)
+            var changeTypeDict = Changes.Where(change => change.ChangeType == ChangeType.Added || change.ChangeType == ChangeType.Removed)
+                                        .DistinctBy(change => change.Project)
                                         .ToDictionary(c => c.Project, c => c.ChangeType);
 
-            foreach (var change in changes.Where(c => changeTypeDict[c.Key] == ChangeType.Added))
+            foreach (var change in changes.Where(c => changeTypeDict.TryGetValue(c.Key, out var ct) && ct == ChangeType.Added))
             {
                 var itemGroup = project.ItemGroups.FirstOrDefault(ig => IsConditionForFramework(ig.Condition, change.framework) && DoesItemGroupContainProjectReference(ig));
 
@@ -255,6 +258,60 @@ namespace AHelper.SlnMerge.Core
                 if (!itemGroup.Children.Any())
                 {
                     itemGroup.Parent.RemoveChild(itemGroup);
+                }
+            }
+
+            if (Changes.Any(change => change.ChangeType == ChangeType.AddedVersion))
+            {
+                var versions = project.Properties.Where(prop => prop.Name == "Version").ToList();
+                var needsGenerated = true;
+
+                foreach (var version in versions)
+                {
+                    if (version.Condition?.Contains("slnmerge") ?? false)
+                    {
+                        if (version.Condition.Contains("Generated"))
+                        {
+                            needsGenerated = false;
+                        }
+                        continue;
+                    }
+
+                    if (string.IsNullOrEmpty(version.Condition))
+                    {
+                        version.Condition = "'Original'=='slnmerge'";
+                    }
+                    else
+                    {
+                        version.Condition = $"'Original'=='slnmerge'&&{version.Condition}";
+                    }
+                }
+
+                if (needsGenerated)
+                {
+                    var generatedVersion = project.AddProperty("Version", "9999.0.0");
+                    generatedVersion.Condition = "'Generated'!='slnmerge'";
+                }
+            }
+
+            if (Changes.Any(change => change.ChangeType == ChangeType.RemovedVersion))
+            {
+                var versions = project.Properties.Where(prop => prop.Name == "Version").ToList();
+
+                foreach (var version in versions)
+                {
+                    if (version.Condition?.Contains("slnmerge") ?? false)
+                    {
+                        if (version.Condition.Contains("'Generated'!='slnmerge'"))
+                        {
+                            version.Parent.RemoveChild(version);
+                            continue;
+                        }
+                        if (version.Condition.Contains("'Original'=='slnmerge'"))
+                        {
+                            version.Condition = Regex.Replace(version.Condition, "'Original'=='slnmerge'(&&)?", "");
+                        }
+                    }
                 }
             }
 
@@ -323,6 +380,41 @@ namespace AHelper.SlnMerge.Core
                                    .Join(workspace.PackageLookup.Values, path => path, proj => proj.Filepath, (path, proj) => proj)
                                    .Select(proj => proj.PopulateSolutionAsync(parent, workspace))
                                    .WhenAll();
+        }
+
+        public async Task AddVersionOverrideAsync(Workspace workspace)
+        {
+            var projects = await workspace.Solutions.Select(sln => sln.Projects.Value).WhenAll(projs => projs.SelectMany(projs => projs)).ToListAsync();
+            var isReferenced = projects.Any(proj => proj.PackageReferences.Select(reference => (reference, path: Path.GetFullPath(reference.Include, Path.GetDirectoryName(Filepath))))
+                                                                          .Join(workspace.PackageLookup.Values, tuple => tuple.path, proj => proj.Filepath, (tuple, proj) => (tuple.reference, proj))
+                                                                          .Select(tuple => tuple.proj)
+                                                                          .Concat(proj.Changes.Where(change => change.ChangeType == ChangeType.Added)
+                                                                                              .Select(kvp => kvp.Project))
+                                                                          .Any(p => p == this));
+
+            if (isReferenced)
+            {
+                using var projectCollection = new ProjectCollection();
+                var msbuildProject = ProjectRootElement.Open(Filepath, projectCollection, true);
+                var versions = msbuildProject.Properties.Where(prop => prop.Name == "Version").ToList();
+
+                if (!versions.Any(version => version.Condition?.Contains("slnmerge") ?? false))
+                {
+                    Changes.Add(new Change
+                    {
+                        ChangeType = ChangeType.AddedVersion
+                    });
+                }
+            }
+        }
+
+        public Task RemoveVersionOverrideAsync()
+        {
+            Changes.Add(new Change
+            {
+                ChangeType = ChangeType.RemovedVersion
+            });
+            return Task.CompletedTask;
         }
 
         public IEnumerable<Project> GetProjectReferences(Workspace workspace, ICollection<string> frameworks = null)

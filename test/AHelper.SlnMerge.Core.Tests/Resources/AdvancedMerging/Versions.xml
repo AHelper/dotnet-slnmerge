@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Versions>
+  <Versions.A>
+    <Versions.AA>
+      <Versions.AA.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <PackageReference Include="Versions.BA" Version="2.2.2" />
+  </ItemGroup>
+
+</Project>
+]]></Versions.AA.csproj>
+    </Versions.AA>
+    <Versions.A.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Versions.AA", "Versions.AA\Versions.AA.csproj", "{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Debug|x64.Build.0 = Debug|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Release|x64.ActiveCfg = Release|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Release|x64.Build.0 = Release|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A3E24B7-9912-4A4E-9FEE-FA0B4098E8D8}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></Versions.A.sln>
+  </Versions.A>
+  <Versions.B>
+    <Versions.BA>
+      <Versions.BA.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <PackageReference Include="Versions.CA" Version="2.2.2" />
+  </ItemGroup>
+
+</Project>
+]]></Versions.BA.csproj>
+    </Versions.BA>
+    <Versions.B.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Versions.BA", "Versions.BA\Versions.BA.csproj", "{FF04F275-8F21-4306-9788-2E25E688A147}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Release|x64.Build.0 = Release|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF04F275-8F21-4306-9788-2E25E688A147}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></Versions.B.sln>
+  </Versions.B>
+  <Versions.C>
+    <Versions.CA>
+      <Versions.CA.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+]]></Versions.CA.csproj>
+    </Versions.CA>
+    <Versions.C.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Versions.CA", "Versions.CA\Versions.CA.csproj", "{E7696CC0-0D95-403B-AAC1-1A83315A3320}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Debug|x64.Build.0 = Debug|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Debug|x86.Build.0 = Debug|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Release|x64.ActiveCfg = Release|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Release|x64.Build.0 = Release|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7696CC0-0D95-403B-AAC1-1A83315A3320}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
+]]></Versions.C.sln>
+  </Versions.C>
+  <nuget.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+    <clear />
+    <add key="feed" value="./feed/" />
+    <add key="nuget" value="https://api.nuget.org/v3/index.json" />
+  </packageSources>
+</configuration>
+]]></nuget.config>
+</Versions>

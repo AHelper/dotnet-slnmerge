@@ -54,7 +54,7 @@ Feature: Advanced merging
         Then project B/BA/BA.csproj should reference ../../A/AA/AA.csproj,../../A/AB/AB.csproj
         And project B/BB/BB.csproj should reference ../../A/AB/AB.csproj
         And solution B/B.sln should include ../A/AA/AA.csproj, ../A/AB/AB.csproj
-
+        
     # Addressing #18
     Scenario: Transitive2
         Given test project created with "AdvancedMerging/Transitive2.xml"
@@ -63,3 +63,28 @@ Feature: Advanced merging
         Then project A/AA/AA.csproj should reference ../../B/BA/BA.csproj
         Then project A/AA/AA.csproj should not reference ../AD/AD.csproj
         And project A/AC/AC.csproj should not reference ../../B/BA/BA.csproj
+
+    Scenario: Versions
+        Given test project created with "AdvancedMerging/Versions.xml"
+        And nugets created for solution "Versions.C/Versions.C.sln" with version "2.2.2"
+        And nugets created for solution "Versions.B/Versions.B.sln" with version "2.2.2"
+        When merging solutions with restoring: Versions.A, Versions.C
+        Then project Versions.A/Versions.AA/Versions.AA.csproj should reference ../../Versions.C/Versions.CA/Versions.CA.csproj
+        And project Versions.C/Versions.CA/Versions.CA.csproj should have high version
+
+    Scenario: VersionsWithExisting
+        Given test project created with "AdvancedMerging/VersionsWithExisting.xml"
+        And nugets created for solution "VersionsWithExisting.C/VersionsWithExisting.C.sln" with version "2.2.2"
+        And nugets created for solution "VersionsWithExisting.B/VersionsWithExisting.B.sln" with version "2.2.2"
+        When merging solutions with restoring: VersionsWithExisting.A, VersionsWithExisting.C
+        Then project VersionsWithExisting.A/VersionsWithExisting.AA/VersionsWithExisting.AA.csproj should reference ../../VersionsWithExisting.C/VersionsWithExisting.CA/VersionsWithExisting.CA.csproj
+        And project VersionsWithExisting.C/VersionsWithExisting.CA/VersionsWithExisting.CA.csproj should have high version with original version 2.2.2
+
+    Scenario: UndoingVersionsWithExisting
+        Given test project created with "AdvancedMerging/VersionsWithExisting.xml"
+        And nugets created for solution "VersionsWithExisting.C/VersionsWithExisting.C.sln" with version "2.2.2"
+        And nugets created for solution "VersionsWithExisting.B/VersionsWithExisting.B.sln" with version "2.2.2"
+        When merging solutions with restoring: VersionsWithExisting.A, VersionsWithExisting.C
+        And undoing merges in solutions: VersionsWithExisting.A, VersionsWithExisting.C
+        Then project VersionsWithExisting.A/VersionsWithExisting.AA/VersionsWithExisting.AA.csproj should not reference ../../VersionsWithExisting.C/VersionsWithExisting.CA/VersionsWithExisting.CA.csproj
+        And project VersionsWithExisting.C/VersionsWithExisting.CA/VersionsWithExisting.CA.csproj should not have high version with original version 2.2.2

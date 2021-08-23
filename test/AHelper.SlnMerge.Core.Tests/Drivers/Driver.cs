@@ -122,6 +122,37 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             Assert.All(references, reference => Assert.Equal("slnmerge", items.FirstOrDefault(item => NormalizePaths(item.EvaluatedInclude) == reference)?.GetMetadataValue("Origin")));
         }
 
+        internal void CheckHighVersionProperty(string projectPath, string originalVersion = null)
+        {
+            using var projectCollection = new ProjectCollection();
+            var projectElement = Microsoft.Build.Construction.ProjectRootElement.Open(Path.Combine(_projectPath, projectPath), projectCollection, true);
+            var versionProperties = projectElement.Properties.Where(prop => prop.Name == "Version").ToList();
+
+            Assert.Contains(versionProperties, version => version.Condition.Contains("slnmerge"));
+
+            if (originalVersion != null)
+            {
+                Assert.Contains(versionProperties, version => version.Condition.Contains("Original") && version.Value == originalVersion);
+            }
+
+            var project = new MSBuildProject(Path.Combine(_projectPath, projectPath), new Dictionary<string, string>(), null, projectCollection, ProjectLoadSettings.IgnoreMissingImports | ProjectLoadSettings.IgnoreInvalidImports);
+            Assert.Equal("9999.0.0", project.GetPropertyValue("Version"));
+        }
+
+        internal void CheckNoHighVersionProperty(string projectPath, string originalVersion = null)
+        {
+            using var projectCollection = new ProjectCollection();
+            var projectElement = Microsoft.Build.Construction.ProjectRootElement.Open(Path.Combine(_projectPath, projectPath), projectCollection, true);
+            var versionProperties = projectElement.Properties.Where(prop => prop.Name == "Version").ToList();
+
+            Assert.DoesNotContain(versionProperties, version => version.Condition.Contains("slnmerge"));
+
+            if (originalVersion != null)
+            {
+                Assert.Contains(versionProperties, version => version.Condition == string.Empty && version.Value == originalVersion);
+            }
+        }
+
         public void CheckReferences(string projectPath, IEnumerable<string> references, string framework)
         {
             using var projectCollection = new ProjectCollection();

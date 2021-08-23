@@ -134,6 +134,24 @@ namespace AHelper.SlnMerge.Core
             });
         }
 
+        public async Task AddVersionsAsync(IProgressTask task)
+        {
+            var projects = await Solutions.Select(sln => sln.Projects.Value)
+                                          .WhenAll(projs => projs.SelectMany(proj => proj)
+                                                                 .Distinct());
+
+            await projects.IncrementForEach(task, 100, project => project.AddVersionOverrideAsync(this));
+        }
+
+        public async Task RemoveVersionsAsync(IProgressTask task)
+        {
+            var projects = await Solutions.Select(sln => sln.Projects.Value)
+                                          .WhenAll(projs => projs.SelectMany(proj => proj)
+                                                                 .Distinct());
+
+            await projects.IncrementForEach(task, 100, project => project.RemoveVersionOverrideAsync());
+        }
+
         public Task PopulateSolutionsAsync(IProgressTask task)
             => Solutions.IncrementForEach(task, 100, async sln =>
             {

@@ -106,6 +106,18 @@ namespace AHelper.SlnMerge.Core.Tests.StepDefinitions
         public void ThenCheckAmbigiousSolutionException(string solutions)
             => _driver.CheckAmbiguousSolutionException(Split(solutions));
 
+        [Then(@"project (.*) should have high version")]
+        public void ThenCheckHighVersionProperty(string project)
+            => _driver.CheckHighVersionProperty(project);
+
+        [Then(@"project (.*) should have high version with original version (.*)")]
+        public void ThenCheckHighVersionProperty(string project, string originalVersion)
+            => _driver.CheckHighVersionProperty(project, originalVersion);
+
+        [Then(@"project (.*) should not have high version with original version (.*)")]
+        public void ThenCheckNoHighVersionProperty(string project, string originalVersion)
+            => _driver.CheckNoHighVersionProperty(project, originalVersion);
+
         private IEnumerable<string> Split(string str)
             => str.Split(',').Select(name => name.Trim());
 
