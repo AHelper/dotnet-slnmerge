@@ -49,7 +49,7 @@ namespace AHelper.SlnMerge.Core
             }
         }
 
-        public IList<Reference> GetTransitiveReferencedProjects(Workspace workspace, IOutputWriter outputWriter)
+        public IList<Reference> GetTransitiveReferencedProjects(Workspace workspace, bool isOldCsproj, IOutputWriter outputWriter)
         {
             if (_assets is null) return new List<Reference>();
 
@@ -59,12 +59,12 @@ namespace AHelper.SlnMerge.Core
             foreach (var kvp in _assets.Targets.PackageModels)
             {
                 outputWriter.PrintTrace($"- Checking framework '{kvp.Key}'");
-                var packages = kvp.Value.Where(r => r.Type == "package").ToList();
-                var transitives = kvp.Value.Where(r => packages.Any(p => p.Dependencies.ContainsKey(r.PackageId))).ToList();
+                var packages = kvp.Value.Where(r => !isOldCsproj ? r.Type == "package" : true).ToList();
+                var transitives = kvp.Value.Where(r => packages.Any(p => p.Dependencies.ContainsKey(r.PackageId)) && r.Type == "package").ToList();
 
                 foreach (var package in packages)
                 {
-                    outputWriter.PrintTrace($"  - {_assets} has package {package.Name} with deps: {string.Join(", ", package.Dependencies.Keys)}");
+                    outputWriter.PrintTrace($"  - {_assets} has {package.Type} {package.Name} with deps: {string.Join(", ", package.Dependencies.Keys)}");
                 }
                 foreach (var transitive in transitives)
                 {

@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Transitive2>
+  <A>
+    <AA>
+      <Properties />
+      <AA.csproj><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>d08f2ed0-0f97-46de-97be-734e2e0caaec</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AA</RootNamespace>
+    <AssemblyName>AA</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BB" Version="1.1.0" />
+    <Reference Include="System" />
+    
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    
+    
+    <Reference Include="Microsoft.CSharp" />
+    
+    <Reference Include="System.Data" />
+    
+    <Reference Include="System.Net.Http" />
+    
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="../AB/AB.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+ </Project>
+]]></AA.csproj>
+    </AA>
+    <AB>
+      <AB.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="BA" Version="1.1.0" />
+    <PackageReference Include="BB" Version="1.1.0" />
+    <ProjectReference Include="../AD/AD.csproj" />
+  </ItemGroup>
+
+</Project>
+]]></AB.csproj>
+    </AB>
+    <AC>
+      <AC.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="BB" Version="1.1.0" />
+    <ProjectReference Include="../AB/AB.csproj" />
+  </ItemGroup>
+
+</Project>
+]]></AC.csproj>
+    </AC>
+    <AD>
+      <AD.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+  </ItemGroup>
+
+</Project>
+]]></AD.csproj>
+    </AD>
+    <A.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.6.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AA", "AA\AA.csproj", "{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AB", "AB\AB.csproj", "{B16306CD-F2B9-4481-8FEE-545B1DC64113}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AC", "AC\AC.csproj", "{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AD", "AD\AD.csproj", "{62EE4CEA-5812-4C16-A01B-0D08FD07B167}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Debug|x64.Build.0 = Debug|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Debug|x86.Build.0 = Debug|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Release|x64.ActiveCfg = Release|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Release|x64.Build.0 = Release|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Release|x86.ActiveCfg = Release|Any CPU
+		{D08F2ED0-0F97-46DE-97BE-734E2E0CAAEC}.Release|x86.Build.0 = Release|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Debug|x64.Build.0 = Debug|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Debug|x86.Build.0 = Debug|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Release|x64.ActiveCfg = Release|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Release|x64.Build.0 = Release|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Release|x86.ActiveCfg = Release|Any CPU
+		{B16306CD-F2B9-4481-8FEE-545B1DC64113}.Release|x86.Build.0 = Release|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Debug|x86.Build.0 = Debug|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Release|x64.Build.0 = Release|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Release|x86.ActiveCfg = Release|Any CPU
+		{F39639C0-58DE-4BF8-A8CD-E7093FA588DA}.Release|x86.Build.0 = Release|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Debug|x64.Build.0 = Debug|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Debug|x86.Build.0 = Debug|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Release|x64.ActiveCfg = Release|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Release|x64.Build.0 = Release|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Release|x86.ActiveCfg = Release|Any CPU
+		{62EE4CEA-5812-4C16-A01B-0D08FD07B167}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9FFEE4D7-8D2F-4BDA-ABDA-C3C95766E0E1}
+	EndGlobalSection
+EndGlobal
+]]></A.sln>
+  </A>
+  <B>
+    <BA>
+      <BA.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="../BB/BB.csproj" />
+  </ItemGroup>
+
+</Project>
+]]></BA.csproj>
+    </BA>
+    <BB>
+      <BB.csproj><![CDATA[<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+]]></BB.csproj>
+    </BB>
+    <B.sln><![CDATA[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.6.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA", "BA\BA.csproj", "{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BB", "BB\BB.csproj", "{4BBD7242-5F38-4577-B73B-89DC28444FF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Debug|x64.Build.0 = Debug|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Debug|x86.Build.0 = Debug|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Release|x64.ActiveCfg = Release|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Release|x64.Build.0 = Release|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Release|x86.ActiveCfg = Release|Any CPU
+		{338D1ACC-85B5-43EB-BDF4-BEA086858B0F}.Release|x86.Build.0 = Release|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Debug|x64.Build.0 = Debug|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Debug|x86.Build.0 = Debug|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Release|x64.ActiveCfg = Release|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Release|x64.Build.0 = Release|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Release|x86.ActiveCfg = Release|Any CPU
+		{4BBD7242-5F38-4577-B73B-89DC28444FF1}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6057325A-9186-4337-8B96-E317AFF01F3F}
+	EndGlobalSection
+EndGlobal
+]]></B.sln>
+  </B>
+  <nuget.config><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+    <clear />
+    <add key="feed" value="./feed/" />
+    <add key="nuget" value="https://api.nuget.org/v3/index.json" />
+  </packageSources>
+</configuration>
+]]></nuget.config>
+</Transitive2>

@@ -177,7 +177,7 @@ namespace AHelper.SlnMerge.Core
         {
             var graph = NugetGraph.Create(this, options.NoRestore, _outputWriter);
 
-            foreach (var newReference in graph.GetTransitiveReferencedProjects(workspace, _outputWriter))
+            foreach (var newReference in graph.GetTransitiveReferencedProjects(workspace, IsLegacy, _outputWriter))
             {
                 foreach (var framework in newReference.Frameworks)
                 {
