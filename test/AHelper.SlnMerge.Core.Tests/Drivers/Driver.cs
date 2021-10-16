@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
@@ -19,6 +20,8 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         public ITestOutputHelper OutputHelper { get; set; }
         private string _projectPath;
         private readonly Mock<IOutputWriter> _outputWriterMock;
+        private readonly SemaphoreSlim _runnerLock = new(1);
+        private static readonly string _cwd = Directory.GetCurrentDirectory();
 
         public Exception OutputException => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintException))?.Arguments[0] as Exception;
         public Exception OutputWarning => _outputWriterMock.Invocations.FirstOrDefault(i => i.Method.Name == nameof(IOutputWriter.PrintWarning))?.Arguments[0] as Exception;
@@ -38,9 +41,9 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
         public void GenerateProjects(string filename)
         {
-            var doc = XDocument.Load(Path.Join("Resources", filename));
+            var doc = XDocument.Load(Path.Join(_cwd, "Resources", filename));
 
-            _projectPath = Path.Join("Resources", doc.Root.Name.LocalName);
+            _projectPath = Path.Join(_cwd, "Resources", doc.Root.Name.LocalName);
 
             if (Directory.Exists(_projectPath))
             {
@@ -61,7 +64,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         }
 
         public void SetTestProject(string name)
-            => _projectPath = Path.Join("Resources", name);
+            => _projectPath = Path.Join(_cwd, "Resources", name);
 
         public Task MergeSolutionsAsync(IEnumerable<string> solutions, bool shouldAssert, bool shouldRestore, string solutionFolder = null)
             => MergeSolutionsRawAsync(solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(), shouldAssert, shouldRestore, solutionFolder);
@@ -71,8 +74,12 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
         public async Task MergeSolutionsRawAsync(IList<string> solutions, bool shouldAssert, bool shouldRestore, string solutionFolder = null)
         {
+            string cwd = null;
             try
             {
+                await _runnerLock.WaitAsync();
+
+                cwd = Directory.GetCurrentDirectory();
                 await new Runner(_outputWriterMock.Object).RunAsync(new RunnerOptions
                 {
                     Solutions = solutions,
@@ -84,6 +91,14 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             {
                 Assert.Null(ex);
             }
+            finally
+            {
+                if (cwd != null)
+                {
+                    Directory.SetCurrentDirectory(cwd);
+                }
+                _runnerLock.Release();
+            }
 
             if (shouldAssert)
             {
@@ -94,8 +109,11 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
         public async Task UndoMergesAsync(IEnumerable<string> solutions)
         {
+            string cwd = null;
             try
             {
+                await _runnerLock.WaitAsync();
+                cwd = Directory.GetCurrentDirectory();
                 await new Runner(_outputWriterMock.Object).RunAsync(new RunnerOptions
                 {
                     Solutions = solutions.Select(sln => Path.Join(_projectPath, sln)).ToList(),
@@ -105,6 +123,14 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
             catch (Exception ex)
             {
                 Assert.Null(ex);
+            }
+            finally
+            {
+                if (cwd != null)
+                {
+                    Directory.SetCurrentDirectory(cwd);
+                }
+                _runnerLock.Release();
             }
 
             Assert.Null(OutputException);
@@ -157,9 +183,9 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
         {
             using var projectCollection = new ProjectCollection();
             var project = new MSBuildProject(Path.Combine(_projectPath, projectPath),
-                                                                 new Dictionary<string, string>(),
-                                                                 null,
-                                                                 projectCollection);
+                                                          new Dictionary<string, string>(),
+                                                          null,
+                                                          projectCollection);
             var targetFrameworksValue = project.GetProperty("TargetFrameworks")?.EvaluatedValue ?? project.GetPropertyValue("TargetFramework");
 
             foreach (var targetFramework in targetFrameworksValue.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(framework => framework.Trim()))
@@ -280,7 +306,7 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    WorkingDirectory = _projectPath ?? "Resources"
+                    WorkingDirectory = _projectPath ?? Path.Join(_cwd, "Resources")
                 }
             };
             foreach (var argument in arguments)
@@ -313,11 +339,11 @@ namespace AHelper.SlnMerge.Core.Tests.Drivers
 
             if (node.FirstNode is XCData cdata)
             {
-                File.WriteAllText(nodePath, cdata.Value);
+                File.WriteAllText(Path.Join(_cwd, nodePath), cdata.Value);
             }
             else
             {
-                Directory.CreateDirectory(nodePath);
+                Directory.CreateDirectory(Path.Join(_cwd, nodePath));
 
                 foreach (var child in node.Nodes())
                 {
